@@ -1035,6 +1035,7 @@ NextFile:
             Timer150Count = 0
             Try
 #Region "每 7.5s 执行一次的代码"
+                FrmMain.UpdateTitleAccount()
                 If FrmMain.BtnExtraApril_ShowCheck AndAlso AprilDifficultiedDistance <> 0 Then FrmMain.BtnExtraApril.Ribble()
                 '以未知原因窗口被丢到一边去的修复（Top、Left = -25600），还有 #745
                 RunInUi(

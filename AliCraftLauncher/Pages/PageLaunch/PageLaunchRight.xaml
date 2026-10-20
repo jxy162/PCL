@@ -6,7 +6,7 @@
     xmlns:behaviors="clr-namespace:PCL.Controls.Behaviors"
     xmlns:local="clr-namespace:PCL" PanScroll="PanBack">
     <local:MyScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" x:Name="PanBack">
-        <StackPanel Name="PanMain" Margin="25,25,25,10" Grid.IsSharedSizeScope="True">
+        <StackPanel Name="PanMain" Margin="25,25,25,24" Grid.IsSharedSizeScope="True">
             <StackPanel x:Name="PanCustom">
             </StackPanel>
             <local:MyCard Margin="0,0,0,15" Title="启动日志" x:Name="PanLog">

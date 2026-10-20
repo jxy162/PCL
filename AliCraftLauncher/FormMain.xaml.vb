@@ -655,12 +655,28 @@ Public Class FormMain
         If FrmMain Is Nothing OrElse Not FrmMain.IsLoaded Then Return
         FrmMain.UpdateBackgroundAndTitleBar()
     End Sub
+    ' 自用版：子页面额外模糊
+    Public PageBlurExtra As Double = 0
+
+    ''' <summary>
+    ''' 刷新标题栏的当前账号显示。
+    ''' </summary>
+    Public Sub UpdateTitleAccount()
+        Try
+            If LabTitleAccount Is Nothing Then Return
+            Dim Name As String = McLoginName()
+            LabTitleAccount.Text = If(String.IsNullOrWhiteSpace(Name), "未登录", Name)
+        Catch ex As Exception
+            Logger.Warn(ex, "刷新标题栏账号失败")
+        End Try
+    End Sub
+
     Public Sub UpdateBackgroundAndTitleBar()
         Logger.Info("从设置更新背景图片与标题栏样式")
         '背景图片透明度
         ImgBack.Opacity = Settings.Get(Of Integer)("UiBackgroundOpacity") / 1000
         '背景图片模糊
-        Dim BlurRadius As Double = Settings.Get(Of Integer)("UiBackgroundBlur") + 1
+        Dim BlurRadius As Double = Settings.Get(Of Integer)("UiBackgroundBlur") + 1 + PageBlurExtra
         If BlurRadius = 1 Then
             ImgBack.Effect = Nothing
         Else
@@ -1394,6 +1410,17 @@ Public Class FormMain
     ''' 切换现有页面的实际方法。
     ''' </summary>
     Private Sub PageChangeActual(Stack As PageStackData, Optional SubType As PageSubType = -1)
+        ' 自用版：标题栏账号 + 子页面自动模糊壁纸
+        Try
+            UpdateTitleAccount()
+            Dim NewExtra As Double = If({PageType.Setup, PageType.Download, PageType.Other, PageType.TaskManager, PageType.InstanceSelect, PageType.InstanceSetup}.Contains(Stack.Page), 18, 0)
+            If NewExtra <> PageBlurExtra Then
+                PageBlurExtra = NewExtra
+                UpdateBackgroundAndTitleBar()
+            End If
+        Catch ex As Exception
+            Logger.Warn(ex, "页面切换时的外观刷新失败")
+        End Try
         If PageCurrent = Stack AndAlso (PageCurrentSub = SubType OrElse SubType = -1) Then Return
         If Stack.Page = PageType.InstanceSetup AndAlso PageInstanceLeft.Instance IsNot Nothing AndAlso McInstanceLock.IsLocked(PageInstanceLeft.Instance) Then
             Hint("该版本正在被修改，暂时无法进入版本设置！", HintType.Red)
