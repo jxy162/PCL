@@ -40,6 +40,7 @@ Public Class MyButton
         End Get
         Set(value As ColorState)
             _ColorType = value
+            If PanFore IsNot Nothing AndAlso value = ColorState.Highlight Then PanFore.SetResourceReference(Border.BackgroundProperty, "ColorBrush6")
             RefreshColor()
         End Set
     End Property
@@ -157,7 +158,8 @@ Public Class MyButton
                  }, "MyButton Scale " & Uuid)
     End Sub
     Private Sub Button_MouseEnter() Handles Me.MouseEnter
-        AniStart(AaColor(PanFore, BackgroundProperty, If(_ColorType = ColorState.Red, "ColorBrushRedBack", "ColorBrush7"), AnimationColorIn), "MyButton Background " & Uuid)
+        Dim HoverBack As String = If(_ColorType = ColorState.Red, "ColorBrushRedBack", If(_ColorType = ColorState.Highlight, "ColorBrush5", "ColorBrush7"))
+        AniStart(AaColor(PanFore, BackgroundProperty, HoverBack, AnimationColorIn), "MyButton Background " & Uuid)
     End Sub
     Private Sub Button_MouseUp() Handles Me.MouseLeftButtonUp
         If Not IsMouseDown Then Return
@@ -167,7 +169,7 @@ Public Class MyButton
            }, "MyButton Scale " & Uuid)
     End Sub
     Private Sub Button_MouseLeave() Handles Me.MouseLeave
-        AniStart(AaColor(PanFore, BackgroundProperty, "ColorBrushHalfWhite", AnimationColorOut), "MyButton Background " & Uuid)
+        AniStart(AaColor(PanFore, BackgroundProperty, If(_ColorType = ColorState.Highlight, "ColorBrush6", "ColorBrushHalfWhite"), AnimationColorOut), "MyButton Background " & Uuid)
         If Not IsMouseDown Then Return
         IsMouseDown = False
         AniStart(AaScaleTransform(PanFore, 1 - CType(PanFore.RenderTransform, ScaleTransform).ScaleX, 800,, New AniEaseOutFluent(AniEasePower.Strong)), "MyButton Scale " & Uuid)
