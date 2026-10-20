@@ -1,17 +1,74 @@
-# Plain Craft Launcher
+<div align="center">
 
-[![Stars](https://img.shields.io/github/stars/Meloong-Git/PCL?style=flat&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEiIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiI+PHBhdGggZD0iTTggLjI1YS43NS43NSAwIDAgMSAuNjczLjQxOGwxLjg4MiAzLjgxNSA0LjIxLjYxMmEuNzUuNzUgMCAwIDEgLjQxNiAxLjI3OWwtMy4wNDYgMi45Ny43MTkgNC4xOTJhLjc1MS43NTEgMCAwIDEtMS4wODguNzkxTDggMTIuMzQ3bC0zLjc2NiAxLjk4YS43NS43NSAwIDAgMS0xLjA4OC0uNzlsLjcyLTQuMTk0TC44MTggNi4zNzRhLjc1Ljc1IDAgMCAxIC40MTYtMS4yOGw0LjIxLS42MTFMNy4zMjcuNjY4QS43NS43NSAwIDAgMSA4IC4yNVoiIGZpbGw9IiNlYWM1NGYiLz48L3N2Zz4=&logoSize=auto&label=Stars&labelColor=444444&color=eac54f)](https://github.com/Meloong-Git/PCL/)
-[![Issues](https://img.shields.io/github/issues/Meloong-Git/PCL?style=flat&label=Issues&labelColor=444444&color=1F883D)](https://github.com/Meloong-Git/PCL/issues)
-[![哔哩哔哩](https://img.shields.io/badge/动态-BiliBili-00A4DB?style=flat&labelColor=444444&logoSize=auto)](https://space.bilibili.com/11343203/dynamic)
-[![爱发电](https://img.shields.io/badge/赞助-爱发电-946ce6?style=flat&labelColor=444444&logoSize=auto)](https://meloong.com/afd/a/LTCat)
+<img src="Assets/logo.png" width="120" alt="AliCraftLauncher" />
 
-包含 PCL 的大部分源代码，包括 UI 库、动画模块、下载模块、Minecraft 启动模块等！<br/>
-代码并不是实时更新的，它会在每次 PCL 发布更新时同步一次。<br/>
-非常感谢社区的大力支持！
+# AliCraftLauncher
 
-<br/>
+**个人自用的 Minecraft 启动器**
 
-### 相关资源
-- [PCL 下载](https://meloong.com/pcl)：下载可免费使用的正式版 PCL！
-- [PCL 功能投票](https://github.com/Meloong-Git/PCL/discussions/2)：来参加投票吧，开发者会优先处理票数较高的项目！
-- [帮助文档库](https://github.com/LTCatt/PCL2Help)：PCL 内置帮助文档的存储库
+在开源项目 [Plain Craft Launcher 2 (PCL2)](https://github.com/Meloong-Git/PCL) 的基础上二次开发
+
+</div>
+
+---
+
+## 关于本项目
+
+AliCraftLauncher 是一个**个人自用**的 Minecraft 启动器，基于 **Plain Craft Launcher 2** 的开源代码进行了品牌化与功能调整，并使用全新的自绘 LOGO 与界面设计。
+
+> ### 原始出处与版权声明（重要）
+> 本项目的核心代码来自 **Plain Craft Launcher (PCL)**，版权归原作者 **龙腾猫跃（LTCat）** 及 PCL 社区贡献者所有，本项目仅在此基础上进行个人化的二次开发。
+>
+> - 上游仓库：https://github.com/Meloong-Git/PCL
+> - 帮助文档库：https://github.com/LTCatt/PCL2Help
+> - 许可协议：见仓库根目录 [LICENCE](LICENCE)，二次开发同样遵循该协议
+>
+> 感谢原作者与社区的无私开源，本项目才能得以完成。
+
+## 本分支的主要改动
+
+| 改动 | 说明 |
+| --- | --- |
+| 品牌更名 | 程序名 / 图标 / 标题栏 / 界面统一为 AliCraftLauncher，采用全新自绘 LOGO |
+| 恢复下载 | 恢复 Minecraft 原版下载与整合包导入功能 |
+| 精简内容 | 移除赞助 / 会员 / 土豆码 / 主题解锁等与个人使用无关的内容 |
+| 界面重设计 | 重新设计界面外观，参考现代启动器的设计语言 |
+| 正版登录 | 使用自建的 Azure 应用完成微软账号登录 |
+
+## 功能特性
+
+- 版本下载与安装：原版、Forge、NeoForge、Fabric、LiteLoader、OptiFine
+- 整合包导入：CurseForge / Modrinth / 压缩包
+- 资源搜索与下载：CurseForge / Modrinth（内置中文名搜索）
+- 版本管理、模组管理、Java 管理与自动获取
+- 多账号、离线登录 / 微软正版登录
+- 多线程分片下载、断点续传、镜像源加速
+
+## 构建
+
+需要 **Visual Studio 2022**（含 .NET Framework 4.8 目标包）与 **.NET SDK**。
+
+```powershell
+git clone --recursive https://github.com/jxy162/PCL.git
+cd PCL
+dotnet restore PCLCS\PCLCS.csproj
+& "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" `
+    "Plain Craft Launcher 2\Plain Craft Launcher 2.vbproj" -p:Configuration=Release
+```
+
+产物路径：`Plain Craft Launcher 2\bin\AliCraftLauncher.exe`
+
+## 目录结构
+
+| 目录 | 说明 |
+| --- | --- |
+| `Plain Craft Launcher 2/` | 主程序（VB.NET + WPF） |
+| `PCLCS/` | 启动核心与通用能力（C#） |
+| `MeloongCore/` | 通用库（子模块，C#） |
+| `Assets/` | 品牌资源（LOGO 等） |
+
+## 鸣谢
+
+- **龙腾猫跃（LTCat）** 与 PCL 社区：提供了 Plain Craft Launcher 这一优秀的开源项目
+- **bangbang93**：BMCLAPI 镜像源与 Forge 安装工具
+- **MC 百科 / MCIM / EasyTier** 等社区伙伴
