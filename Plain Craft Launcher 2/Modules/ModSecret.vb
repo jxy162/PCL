@@ -15,7 +15,7 @@ Friend Module ModSecret
 
 #Region "网络鉴权"
 
-    Public Const RestrictMcDownload As Boolean = True
+    Public Const RestrictMcDownload As Boolean = False ' self-use: restore Minecraft download (official set True)
     Friend Function SecretCdnSign(UrlWithMark As String) As String
         If Not UrlWithMark.EndsWithF("{CDN}") Then Return UrlWithMark
         Return UrlWithMark.Replace("{CDN}", "").Replace(" ", "%20")
@@ -178,18 +178,7 @@ Friend Module ModSecret
 
 #End Region
 
-#Region "赞助等级"
-
-    Public ReadOnly Property CurrentRank As DonationRank
-        Get
-            Return DonationRank.None
-        End Get
-    End Property
-
-    Public Sub InputPotatoCode(IsUpdating As Boolean)
-    End Sub
-    Friend Sub GeneratePotatoCode()
-    End Sub
+#Region "Identify"
 
     ''' <summary>
     ''' 获取设备识别码。

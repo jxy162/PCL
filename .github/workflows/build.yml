@@ -66,4 +66,4 @@ jobs:
       uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.configuration }} ${{ env.describe }}
-        path: Plain Craft Launcher 2\obj\${{ matrix.configuration }}\Plain Craft Launcher 2.exe
+        path: Plain Craft Launcher 2\obj\${{ matrix.configuration }}\AliCraftLauncher.exe

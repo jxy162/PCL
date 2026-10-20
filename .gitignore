@@ -342,3 +342,6 @@ ASALocalRun/
 healthchecksdb
 
 MaskFiles/
+
+# 本地配置与密钥（勿提交）
+local-notes/

@@ -7,7 +7,7 @@
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
     <OutputType>WinExe</OutputType>
     <RootNamespace>PCL</RootNamespace>
-    <AssemblyName>Plain Craft Launcher 2</AssemblyName>
+    <AssemblyName>AliCraftLauncher</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -40,7 +40,7 @@
     <DefineTrace>false</DefineTrace>
     <IncrementalBuild>true</IncrementalBuild>
     <OutputPath>bin\</OutputPath>
-    <DocumentationFile>Plain Craft Launcher 2.xml</DocumentationFile>
+    <DocumentationFile>AliCraftLauncher.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -58,7 +58,7 @@
     <IncrementalBuild>false</IncrementalBuild>
     <Optimize>true</Optimize>
     <OutputPath>bin\</OutputPath>
-    <DocumentationFile>Plain Craft Launcher 2.xml</DocumentationFile>
+    <DocumentationFile>AliCraftLauncher.xml</DocumentationFile>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>
     <Prefer32Bit>false</Prefer32Bit>
     <CodeAnalysisRuleSet>BasicDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
@@ -90,7 +90,7 @@
     <ManifestCertificateThumbprint>CE7A815CD81401B559C8649A3EEA43B75ECB8FC5</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>Plain Craft Launcher 2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>AliCraftLauncher_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
@@ -103,7 +103,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
-    <DocumentationFile>Plain Craft Launcher 2.xml</DocumentationFile>
+    <DocumentationFile>AliCraftLauncher.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <WarningLevel>1</WarningLevel>
     <NoWarn>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036,42314</NoWarn>

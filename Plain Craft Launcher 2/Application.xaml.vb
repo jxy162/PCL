@@ -165,7 +165,7 @@ RetryCacheCheck:
             End If
             '将已有的 PCL 窗口拖出来
             Dim WindowHwnd As IntPtr = FindWindow(Nothing, "Plain Craft Launcher　")
-            If WindowHwnd = IntPtr.Zero Then WindowHwnd = FindWindow(Nothing, "Plain Craft Launcher 2　")
+            If WindowHwnd = IntPtr.Zero Then WindowHwnd = FindWindow(Nothing, "AliCraftLauncher")
             If WindowHwnd <> IntPtr.Zero Then ShowWindowToTop(WindowHwnd)
             '播放提示音并退出
             Beep()

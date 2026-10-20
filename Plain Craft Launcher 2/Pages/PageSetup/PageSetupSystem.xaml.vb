@@ -6,12 +6,6 @@ Public Class PageSetupSystem
         '重复加载部分
         PanBack.ScrollToHome()
 
-        If BuildType = BuildTypes.Release Then
-            PanDonate.Visibility = Visibility.Collapsed
-        Else
-            PanDonate.Visibility = Visibility.Visible
-            ItemSystemUpdateDownload.Content = "在有新版本时自动下载（更新快照版前需要先输入土豆码）"
-        End If
 
         '非重复加载部分
         Static IsLoaded As Boolean = False
@@ -65,13 +59,6 @@ Public Class PageSetupSystem
         End If
     End Sub
 
-    '识别码/土豆码替代入口
-    Private Sub BtnSystemIdentify_Click(sender As Object, e As MouseButtonEventArgs) Handles BtnSystemIdentify.Click
-        PageOtherAbout.CopyIdentify()
-    End Sub
-    Private Sub BtnSystemUnlock_Click(sender As Object, e As MouseButtonEventArgs) Handles BtnSystemUnlock.Click
-        InputPotatoCode(False)
-    End Sub
 
     '调试模式
     Private Sub CheckDebugMode_Change() Handles CheckDebugMode.Change
