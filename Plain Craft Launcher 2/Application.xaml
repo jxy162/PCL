@@ -65,6 +65,7 @@
             <SolidColorBrush x:Key="ColorBrushSemiTransparent">#01eaf2fe</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBrushBackgroundTransparentSidebar" Color="#F1FFFFFF" />
             <SolidColorBrush x:Key="ColorBrushCard" Color="#F5FFFFFF" />
+            <SolidColorBrush x:Key="ColorBrushBarGlass" Color="#C8FFFFFF" />
 
             <!-- Window -->
             <Style TargetType="{x:Type Window}" x:Key="MyWindow">

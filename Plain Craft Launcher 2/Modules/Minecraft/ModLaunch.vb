@@ -1013,7 +1013,10 @@ Retry:
                 Throw New Exception("$登录尝试太过频繁，请等待几分钟后再试！")
             ElseIf ex.StatusCode = HttpStatusCode.Forbidden Then
                 Logger.Warn(ex, "微软登录第 4 步汇报 403")
-                Throw New Exception("$当前 IP 的登录尝试异常。" & vbCrLf & "如果你使用了 VPN 或加速器，请把它们关掉或更换节点后再试！")
+                Throw New Exception("$正版登录失败：Minecraft 服务拒绝了本次请求。" & vbCrLf &
+                                        "最常见的原因是：本启动器使用的应用（Client ID）尚未通过 Mojang 审批。" & vbCrLf &
+                                        "请在浏览器打开 aka.ms/mce-reviewappid 提交该 Client ID 审核；" & vbCrLf &
+                                        "审核通过前，可在左侧选择「离线」登录正常游戏。")
             ElseIf ex.StatusCode = HttpStatusCode.ServiceUnavailable Then
                 Logger.Warn(ex, "微软登录第 4 步汇报 503")
                 Throw New Exception("$Mojang 服务器出现问题，请稍后再试。" & vbCrLf & "你的网络是正常的，PCL 也是正常的，是 Mojang 出问题了……")

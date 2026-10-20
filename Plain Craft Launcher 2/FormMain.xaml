@@ -156,7 +156,7 @@
                     </Border>
                 </Grid>
                 <StackPanel x:Name="PanHint" IsHitTestVisible="False" UseLayoutRounding="True" SnapsToDevicePixels="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,20" Grid.RowSpan="2" />
-                <Grid x:Name="PanBottom" Grid.Row="2" Height="44" Background="{DynamicResource ColorBrushBackgroundTransparentSidebar}">
+                <Grid x:Name="PanBottom" Grid.Row="2" Height="44" Background="{DynamicResource ColorBrushBarGlass}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="1*" />
