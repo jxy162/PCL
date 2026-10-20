@@ -128,6 +128,11 @@ Friend Module ModSecret
             Else
                 Application.Current.Resources("ColorBrushBackgroundTransparentSidebar") = New SolidColorBrush(New MyColor(241, 255, 255, 255))
             End If
+            If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
+                Application.Current.Resources("ColorBrushCard") = New SolidColorBrush(New MyColor(245, 22, 26, 32))
+            Else
+                Application.Current.Resources("ColorBrushCard") = New SolidColorBrush(New MyColor(245, 255, 255, 255))
+            End If
             Application.Current.Resources("ColorObject1") = CType(Color1, Color)
             Application.Current.Resources("ColorObject2") = CType(Color2, Color)
             Application.Current.Resources("ColorObject3") = CType(Color3, Color)
