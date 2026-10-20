@@ -291,7 +291,31 @@ Public Class PageLaunchRight
                 Loop
                 Content = "<StackPanel xmlns=""http://schemas.microsoft.com/winfx/2006/xaml/presentation"" xmlns:sys=""clr-namespace:System;assembly=mscorlib"" xmlns:x=""http://schemas.microsoft.com/winfx/2006/xaml"" xmlns:local=""clr-namespace:PCL;assembly=AliCraftLauncher"" xmlns:core=""clr-namespace:MeloongCore;assembly=MeloongCore"" xmlns:corewpf=""clr-namespace:MeloongCore.Wpf;assembly=MeloongCore.Wpf"">" & Content & "</StackPanel>"
                 Logger.Info($"实例化：加载主页 UI 开始，最终内容长度：{Content.Count}")
-                PanCustom.Children.Add(GetObjectFromXML(Content))
+                Dim HomeRoot As Object = GetObjectFromXML(Content)
+                PanCustom.Children.Add(HomeRoot)
+                ' 自用版：主页卡片依次入场动画
+                Try
+                    Dim HomeCards As New List(Of FrameworkElement)
+                    If TypeOf HomeRoot Is Panel Then
+                        For Each HomeChild As Object In CType(HomeRoot, Panel).Children
+                            If TypeOf HomeChild Is FrameworkElement Then HomeCards.Add(CType(HomeChild, FrameworkElement))
+                        Next
+                    End If
+                    If HomeCards.Count > 0 Then
+                        Dim HomeAni As New List(Of AniData)
+                        Dim HomeDelay As Integer = 0
+                        For Each HomeCard As FrameworkElement In HomeCards
+                            HomeCard.Opacity = 0
+                            HomeCard.RenderTransform = New TranslateTransform(0, 18)
+                            HomeAni.Add(AaOpacity(HomeCard, 1, 240, HomeDelay, New AniEaseOutFluent))
+                            HomeAni.Add(AaTranslateY(HomeCard, 0, 340, HomeDelay, New AniEaseOutBack(AniEasePower.Weak)))
+                            HomeDelay += 45
+                        Next
+                        AniStart(HomeAni, "HomePageEnter")
+                    End If
+                Catch ex As Exception
+                    Logger.Warn(ex, "主页卡片入场动画失败")
+                End Try
                 '加载计时
                 Dim LoadCostTime = (Date.Now - LoadStartTime).Milliseconds
                 Logger.Info($"实例化：加载主页 UI 完成，耗时 {LoadCostTime}ms")
