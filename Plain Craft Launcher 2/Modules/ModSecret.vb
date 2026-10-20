@@ -70,14 +70,41 @@ Friend Module ModSecret
             If ThemeNow = NewTheme AndAlso NewTheme >= 0 Then Return
             If NewTheme >= 0 Then ThemeNow = NewTheme
 
-            Color1 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.2, 25 + ColorLightAdjust * 0.3)
-            Color2 = New MyColor().FromHSL2(ColorHue, ColorSat, 45 + ColorLightAdjust)
-            Color3 = New MyColor().FromHSL2(ColorHue, ColorSat, 55 + ColorLightAdjust)
-            Color4 = New MyColor().FromHSL2(ColorHue, ColorSat, 65 + ColorLightAdjust)
-            Color5 = New MyColor().FromHSL2(ColorHue, ColorSat, 80 + ColorLightAdjust * 0.4)
-            Color6 = New MyColor().FromHSL2(ColorHue, ColorSat, 91 + ColorLightAdjust * 0.1)
-            Color7 = New MyColor().FromHSL2(ColorHue, ColorSat, 95)
-            Color8 = New MyColor().FromHSL2(ColorHue, ColorSat, 97)
+            If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
+                Color1 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.1, 94)
+                Color2 = New MyColor().FromHSL2(ColorHue, ColorSat, 62)
+                Color3 = New MyColor().FromHSL2(ColorHue, ColorSat, 67)
+                Color4 = New MyColor().FromHSL2(ColorHue, ColorSat, 56)
+                Color5 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.6, 34)
+                Color6 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.45, 25)
+                Color7 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.35, 19)
+                Color8 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.3, 14)
+                ColorGray1 = New MyColor(240, 240, 240)
+                ColorGray2 = New MyColor(200, 200, 200)
+                ColorGray3 = New MyColor(170, 170, 170)
+                ColorGray4 = New MyColor(135, 135, 135)
+                ColorGray5 = New MyColor(95, 95, 95)
+                ColorGray6 = New MyColor(58, 58, 58)
+                ColorGray7 = New MyColor(42, 42, 42)
+                ColorGray8 = New MyColor(30, 30, 30)
+            Else
+                Color1 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.2, 25 + ColorLightAdjust * 0.3)
+                Color2 = New MyColor().FromHSL2(ColorHue, ColorSat, 45 + ColorLightAdjust)
+                Color3 = New MyColor().FromHSL2(ColorHue, ColorSat, 55 + ColorLightAdjust)
+                Color4 = New MyColor().FromHSL2(ColorHue, ColorSat, 65 + ColorLightAdjust)
+                Color5 = New MyColor().FromHSL2(ColorHue, ColorSat, 80 + ColorLightAdjust * 0.4)
+                Color6 = New MyColor().FromHSL2(ColorHue, ColorSat, 91 + ColorLightAdjust * 0.1)
+                Color7 = New MyColor().FromHSL2(ColorHue, ColorSat, 95)
+                Color8 = New MyColor().FromHSL2(ColorHue, ColorSat, 97)
+                ColorGray1 = New MyColor(64, 64, 64)
+                ColorGray2 = New MyColor(115, 115, 115)
+                ColorGray3 = New MyColor(140, 140, 140)
+                ColorGray4 = New MyColor(166, 166, 166)
+                ColorGray5 = New MyColor(204, 204, 204)
+                ColorGray6 = New MyColor(235, 235, 235)
+                ColorGray7 = New MyColor(240, 240, 240)
+                ColorGray8 = New MyColor(245, 245, 245)
+            End If
             ColorBg0 = Color4 * 0.4 + Color5 * 0.4 + ColorGray4 * 0.2
             ColorBg1 = New MyColor(190, Color7)
 
@@ -114,20 +141,22 @@ Friend Module ModSecret
             '顶部条背景
             Dim Brush = New LinearGradientBrush With {.EndPoint = New Point(1, 0), .StartPoint = New Point(0, 0)}
             Dim Deltas = ColorHueTopbarDelta.Switch(Function(d) New Integer() {-d, 0, d}, Function(d) d)
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 0, .Color = New MyColor().FromHSL2(ColorHue + Deltas(0), ColorSat, 48 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.5, .Color = New MyColor().FromHSL2(ColorHue + Deltas(1), ColorSat, 54 + ColorLightAdjust)})
-            Brush.GradientStops.Add(New GradientStop With {.Offset = 1, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat, 48 + ColorLightAdjust)})
+            Dim TopL As Integer = If(Settings.Get(Of Integer)("UiThemeMode") = 1, 19, 48)
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 0, .Color = New MyColor().FromHSL2(ColorHue + Deltas(0), ColorSat, TopL + ColorLightAdjust)})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 0.5, .Color = New MyColor().FromHSL2(ColorHue + Deltas(1), ColorSat, TopL + 6 + ColorLightAdjust)})
+            Brush.GradientStops.Add(New GradientStop With {.Offset = 1, .Color = New MyColor().FromHSL2(ColorHue + Deltas(2), ColorSat, TopL + ColorLightAdjust)})
             FrmMain.PanTitle.Background = Brush
             FrmMain.PanTitle.Background.Freeze()
             '主页面背景
             If Settings.Get(Of Boolean)("UiBackgroundColorful") Then
                 Brush = New LinearGradientBrush With {.EndPoint = New Point(0.1, 1), .StartPoint = New Point(0.9, 0)}
-                Brush.GradientStops.Add(New GradientStop With {.Offset = -0.1, .Color = New MyColor().FromHSL2(ColorHue - 15, ColorSat * 0.8, 91)})
-                Brush.GradientStops.Add(New GradientStop With {.Offset = 0.4, .Color = New MyColor().FromHSL2(ColorHue, ColorSat * 0.8, 91)})
-                Brush.GradientStops.Add(New GradientStop With {.Offset = 1.1, .Color = New MyColor().FromHSL2(ColorHue + 15, ColorSat * 0.8, 91)})
+                Dim BgL As Integer = If(Settings.Get(Of Integer)("UiThemeMode") = 1, 15, 91)
+                Brush.GradientStops.Add(New GradientStop With {.Offset = -0.1, .Color = New MyColor().FromHSL2(ColorHue - 15, ColorSat * 0.8, BgL)})
+                Brush.GradientStops.Add(New GradientStop With {.Offset = 0.4, .Color = New MyColor().FromHSL2(ColorHue, ColorSat * 0.8, BgL)})
+                Brush.GradientStops.Add(New GradientStop With {.Offset = 1.1, .Color = New MyColor().FromHSL2(ColorHue + 15, ColorSat * 0.8, BgL)})
                 FrmMain.PanForm.Background = Brush
             Else
-                FrmMain.PanForm.Background = New MyColor(245, 245, 245)
+                FrmMain.PanForm.Background = If(Settings.Get(Of Integer)("UiThemeMode") = 1, New SolidColorBrush(New MyColor(20, 22, 26)), New SolidColorBrush(New MyColor(245, 245, 245)))
             End If
             FrmMain.PanForm.Background.Freeze()
         End Sub)
