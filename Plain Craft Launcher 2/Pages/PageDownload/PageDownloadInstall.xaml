@@ -97,7 +97,7 @@
                                 </DockPanel>
                             </Grid>
                             <Grid Height="40" VerticalAlignment="Top" Background="Transparent" Cursor="Hand">
-                                <Path HorizontalAlignment="Right" Margin="0,0,16,0" Stretch="Uniform" Height="6" Width="10" Fill="{StaticResource ColorBrush1}" RenderTransformOrigin="0.5,0.5">
+                                <Path HorizontalAlignment="Right" Margin="0,0,16,0" Stretch="Uniform" Height="6" Width="10" Fill="{DynamicResource ColorBrush1}" RenderTransformOrigin="0.5,0.5">
                                     <Path.Data>M2,4 l-2,2 10,10 10,-10 -2,-2 -8,8 -8,-8 z</Path.Data>
                                     <Path.RenderTransform><RotateTransform Angle="270" /></Path.RenderTransform>
                                 </Path>

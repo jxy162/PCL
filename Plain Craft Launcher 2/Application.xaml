@@ -138,7 +138,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="Thumb">
-                            <Border Background="{StaticResource ColorBrushSemiTransparent}" SnapsToDevicePixels="True">
+                            <Border Background="{DynamicResource ColorBrushSemiTransparent}" SnapsToDevicePixels="True">
                                 <Border Background="{TemplateBinding Foreground}" CornerRadius="3" Margin="2" />
                             </Border>
                         </ControlTemplate>
@@ -240,7 +240,7 @@
             <!-- TextBox -->
             <Style TargetType="local:MyTextBox">
                 <Setter Property="BorderThickness" Value="1" />
-                <Setter Property="Background" Value="{StaticResource ColorBrushHalfWhite}" />
+                <Setter Property="Background" Value="{DynamicResource ColorBrushHalfWhite}" />
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="SelectionBrush" Value="{DynamicResource ColorBrush3}" />
                 <Setter Property="Foreground" Value="{DynamicResource ColorBrush1}" />
@@ -271,7 +271,7 @@
                                     <!-- 由于未知原因，TextView 会有 2,0 的 Margin -->
                                 </Border>
                                 <Border Margin="{TemplateBinding Padding}" IsHitTestVisible="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" BorderThickness="0">
-                                    <TextBlock x:Name="labHint" Foreground="{StaticResource ColorBrushGray4}" Margin="7,0,0,0" Padding="{TemplateBinding BorderThickness}" FontSize="{TemplateBinding FontSize}" FontFamily="Resources/#PCL English, Microsoft YaHei UI" />
+                                    <TextBlock x:Name="labHint" Foreground="{DynamicResource ColorBrushGray4}" Margin="7,0,0,0" Padding="{TemplateBinding BorderThickness}" FontSize="{TemplateBinding FontSize}" FontFamily="Resources/#PCL English, Microsoft YaHei UI" />
                                 </Border>
                                 <TextBlock Grid.Row="1" x:Name="labWrong" Height="0" Foreground="{TemplateBinding BorderBrush}" Padding="0,4,0,0" Margin="0,0,0,-3" />
                             </Grid>
@@ -285,7 +285,7 @@
                 <Setter Property="VerticalContentAlignment" Value="Top" />
                 <Setter Property="SelectionBrush" Value="{DynamicResource ColorBrush3}" />
                 <Setter Property="Foreground" Value="{DynamicResource ColorBrush1}" />
-                <Setter Property="Background" Value="{StaticResource ColorBrushHalfWhite}" />
+                <Setter Property="Background" Value="{DynamicResource ColorBrushHalfWhite}" />
                 <Setter Property="BorderBrush" Value="{DynamicResource ColorBrushBg0}" />
                 <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
                 <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -300,8 +300,8 @@
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsEnabled" Value="False">
                                     <Trigger.Setters>
-                                        <Setter Property="BorderBrush" Value="{StaticResource ColorBrushGray5}" />
-                                        <Setter Property="Background" Value="{StaticResource ColorBrushGray6}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource ColorBrushGray5}" />
+                                        <Setter Property="Background" Value="{DynamicResource ColorBrushGray6}" />
                                     </Trigger.Setters>
                                 </Trigger>
                                 <Trigger Property="IsMouseOver" Value="True">
@@ -337,7 +337,7 @@
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="SnapsToDevicePixels" Value="True" />
                 <Setter Property="Foreground" Value="{DynamicResource ColorBrushBg0}" />
-                <Setter Property="Background" Value="{StaticResource ColorBrushHalfWhite}" />
+                <Setter Property="Background" Value="{DynamicResource ColorBrushHalfWhite}" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
                 <Setter Property="FontSize" Value="13" />
                 <Setter Property="MaxDropDownHeight" Value="320" />
@@ -407,7 +407,7 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ToggleButton">
-                            <Border Background="{StaticResource ColorBrushSemiTransparent}">
+                            <Border Background="{DynamicResource ColorBrushSemiTransparent}">
                                 <Path x:Name="path" Width="15" RenderTransformOrigin="0.3,0.5" HorizontalAlignment="Right" Data="M1,1L4.5,4.5L8,1" StrokeThickness="1.5" Stroke="{TemplateBinding Foreground}" VerticalAlignment="Center">
                                     <Path.RenderTransform>
                                         <RotateTransform />
@@ -447,7 +447,7 @@
             <Style TargetType="ComboBoxItem" x:Key="MyComboBoxItem">
                 <Setter Property="OverridesDefaultStyle" Value="True" />
                 <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                <Setter Property="Background" Value="{StaticResource ColorBrushTransparent}" />
+                <Setter Property="Background" Value="{DynamicResource ColorBrushTransparent}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="ComboBoxItem">

@@ -119,6 +119,15 @@ Friend Module ModSecret
             Application.Current.Resources("ColorBrush8") = New SolidColorBrush(Color8)
             Application.Current.Resources("ColorBrushBg0") = New SolidColorBrush(ColorBg0)
             Application.Current.Resources("ColorBrushBg1") = New SolidColorBrush(ColorBg1)
+            Dim GrayBrushes = {ColorGray1, ColorGray2, ColorGray3, ColorGray4, ColorGray5, ColorGray6, ColorGray7, ColorGray8}
+            For i = 0 To 7
+                Application.Current.Resources("ColorBrushGray" & (i + 1)) = New SolidColorBrush(CType(GrayBrushes(i), Color))
+            Next
+            If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
+                Application.Current.Resources("ColorBrushBackgroundTransparentSidebar") = New SolidColorBrush(New MyColor(241, 20, 23, 28))
+            Else
+                Application.Current.Resources("ColorBrushBackgroundTransparentSidebar") = New SolidColorBrush(New MyColor(241, 255, 255, 255))
+            End If
             Application.Current.Resources("ColorObject1") = CType(Color1, Color)
             Application.Current.Resources("ColorObject2") = CType(Color2, Color)
             Application.Current.Resources("ColorObject3") = CType(Color3, Color)
