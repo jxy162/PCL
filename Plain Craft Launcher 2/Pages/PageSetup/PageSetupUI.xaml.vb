@@ -129,6 +129,7 @@ Public Class PageSetupUI
                         FrmMain.ImgBack.Background = New MyBitmap(Address)
                         FrmMain.ImgBack.Visibility = Visibility.Visible
                         FrmMain.UpdateBackgroundAndTitleBar()
+                        If Settings.Get(Of Boolean)("UiThemeDynamic") Then SetThemeFromImage(Address)
                         If IsHint Then Hint("背景图片已刷新：" & PathUtils.GetLastPart(Address), HintType.Green, False)
                     Catch ex As Exception
                         If ex.Message.Contains("参数无效") Then

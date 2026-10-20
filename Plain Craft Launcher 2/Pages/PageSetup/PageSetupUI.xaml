@@ -96,6 +96,7 @@
             </local:MyCard>
             <local:MyCard x:Name="CardBackground" Margin="0,0,0,15" Title="背景图片">
                 <StackPanel Margin="25,40,25,20">
+                    <local:MyCheckBox local:SettingService.Key="UiThemeDynamic" Text="从背景图片提取主色调（动态主题）" Margin="0,0,0,10" />
                     <Grid x:Name="PanBackgroundSuit" Height="28" Margin="0,0,0,10" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" SharedSizeGroup="Name" />

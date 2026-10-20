@@ -71,6 +71,9 @@ Friend Module ModSecret
             If NewTheme >= 0 Then ThemeNow = NewTheme
 
             ' 自用版：补回"主题预设 -> 色相/饱和度/亮度"映射（原 ThemeCheckAll 被上游移除）
+            If Settings.Get(Of Boolean)("UiThemeDynamic") Then
+                ColorHueTopbarDelta = 12 ' 动态取色时使用固定的顶栏渐变
+            Else
             Select Case Settings.Get(Of Integer)("UiLauncherTheme")
                 Case 0 ' 龙猫蓝
                     ColorHue = 210 : ColorSat = 85 : ColorLightAdjust = 0
@@ -106,6 +109,7 @@ Friend Module ModSecret
                     ColorLightAdjust = Settings.Get(Of Integer)("UiLauncherLight") - 20
             End Select
             ColorHueTopbarDelta = Settings.Get(Of Integer)("UiLauncherDelta") \ 10
+            End If
 
             If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
                 Color1 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.1, 94)
@@ -212,6 +216,55 @@ Friend Module ModSecret
             FrmMain.PanForm.Background.Freeze()
         End Sub)
     End Sub
+    ''' <summary>
+    ''' 自用版：从背景图片提取主色调并应用（M3 Dynamic Color）。
+    ''' </summary>
+    Public Sub SetThemeFromImage(FilePath As String)
+        Try
+            Dim Bmp As New System.Windows.Media.Imaging.BitmapImage
+            Bmp.BeginInit()
+            Bmp.UriSource = New Uri(FilePath, UriKind.Absolute)
+            Bmp.DecodePixelWidth = 48
+            Bmp.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad
+            Bmp.EndInit()
+            Dim Conv As New System.Windows.Media.Imaging.FormatConvertedBitmap(Bmp, System.Windows.Media.PixelFormats.Bgra32, Nothing, 0)
+            Dim W As Integer = Conv.PixelWidth, H As Integer = Conv.PixelHeight
+            If W <= 0 OrElse H <= 0 Then Return
+            Dim Px(W * H * 4 - 1) As Byte
+            Conv.CopyPixels(Px, W * 4, 0)
+            Dim SumH As Double = 0, SumS As Double = 0, Weight As Double = 0
+            For i = 0 To W * H - 1
+                Dim B As Double = Px(i * 4), G As Double = Px(i * 4 + 1), R As Double = Px(i * 4 + 2)
+                Dim Mx = Math.Max(R, Math.Max(G, B)), Mn = Math.Min(R, Math.Min(G, B))
+                Dim D = Mx - Mn
+                If Mx < 24 Then Continue For
+                Dim Sat = If(Mx = 0, 0, D / Mx)
+                Dim L = Mx / 255
+                If Sat < 0.15 Then Continue For
+                Dim Hh As Double
+                If D = 0 Then
+                    Hh = ColorHue
+                ElseIf Mx = R Then
+                    Hh = ((G - B) / D) Mod 6
+                ElseIf Mx = G Then
+                    Hh = (B - R) / D + 2
+                Else
+                    Hh = (R - G) / D + 4
+                End If
+                Hh *= 60 : If Hh < 0 Then Hh += 360
+                Dim Wt = Sat * (1 - Math.Abs(L - 0.5))
+                SumH += Hh * Wt : SumS += Sat * Wt : Weight += Wt
+            Next
+            If Weight < 0.02 Then Return
+            ColorHue = CInt(Math.Round(SumH / Weight))
+            ColorSat = CInt(Math.Min(95, Math.Max(45, SumS / Weight * 140)))
+            Logger.Info($"从背景图片提取主色调：Hue={ColorHue}, Sat={ColorSat}")
+            ThemeRefresh()
+        Catch ex As Exception
+            Logger.Warn(ex, "从背景图片取色失败")
+        End Try
+    End Sub
+
     Friend Sub ThemeCheckAll(EffectSetup As Boolean)
     End Sub
     Friend Function ThemeCheckOne(Id As Integer) As Boolean
