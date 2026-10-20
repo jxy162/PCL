@@ -671,6 +671,30 @@ Public Class FormMain
         End Try
     End Sub
 
+    ''' <summary>
+    ''' 自用版：平滑过渡背景模糊（切换页面时）。
+    ''' </summary>
+    Private Sub AnimateBackgroundBlur()
+        Try
+            Dim Target As Double = Settings.Get(Of Integer)("UiBackgroundBlur") + 1 + PageBlurExtra
+            If Target <= 1.01 Then
+                UpdateBackgroundAndTitleBar()
+                Return
+            End If
+            If ImgBack.Effect Is Nothing OrElse TypeOf ImgBack.Effect IsNot Effects.BlurEffect Then
+                ImgBack.Effect = New Effects.BlurEffect With {.Radius = Target}
+            Else
+                Dim Blur As Effects.BlurEffect = CType(ImgBack.Effect, Effects.BlurEffect)
+                Dim Anim As New System.Windows.Media.Animation.DoubleAnimation(Blur.Radius, Target, New Duration(TimeSpan.FromMilliseconds(300)))
+                Anim.EasingFunction = New System.Windows.Media.Animation.CubicEase With {.EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut}
+                Blur.BeginAnimation(Effects.BlurEffect.RadiusProperty, Anim)
+            End If
+            ImgBack.Margin = New Thickness(-Target / 1.8)
+        Catch ex As Exception
+            Logger.Warn(ex, "背景模糊动画失败")
+        End Try
+    End Sub
+
     Public Sub UpdateBackgroundAndTitleBar()
         Logger.Info("从设置更新背景图片与标题栏样式")
         '背景图片透明度
@@ -1416,7 +1440,7 @@ Public Class FormMain
             Dim NewExtra As Double = If({PageType.Setup, PageType.Download, PageType.Other, PageType.TaskManager, PageType.InstanceSelect, PageType.InstanceSetup}.Contains(Stack.Page), 18, 0)
             If NewExtra <> PageBlurExtra Then
                 PageBlurExtra = NewExtra
-                UpdateBackgroundAndTitleBar()
+                AnimateBackgroundBlur()
             End If
         Catch ex As Exception
             Logger.Warn(ex, "页面切换时的外观刷新失败")
