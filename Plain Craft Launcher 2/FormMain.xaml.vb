@@ -771,6 +771,7 @@ Public Class FormMain
         FrmSetupUI?.CardLogo.TriggerForceResize()
         '标题栏文本
         LabTitleLogo.Text = Settings.Get(Of String)("UiLogoText")
+        If String.IsNullOrWhiteSpace(LabTitleLogo.Text) Then LabTitleLogo.Text = "AliCraftLauncher"
         '标题栏文本是否居左
         PanTitleMain.ColumnDefinitions(0).Width = New GridLength(If(Settings.Get(Of Boolean)("UiLogoLeft") AndAlso Settings.Get(Of Integer)("UiLogoType") = 0, 0, 1), GridUnitType.Star)
     End Sub
