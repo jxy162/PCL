@@ -38,6 +38,11 @@
                             <local:MySlider local:SettingService.Key="UiLauncherLight" 
                                             Grid.Row="2" Grid.Column="4" x:Name="SliderLauncherLight" Visibility="Collapsed" MaxValue="40" ValueByKey="5" Margin="0,10,0,0" />
                         </Grid>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Left" Text="外观模式" Margin="0,0,20,0" />
+                            <local:MyRadioBox local:SettingService.Key="UiThemeMode" local:SettingService.Value="0" Text="浅色" Margin="0,0,16,0" />
+                            <local:MyRadioBox local:SettingService.Key="UiThemeMode" local:SettingService.Value="1" Text="深色" />
+                        </StackPanel>
                         <Grid x:Name="PanLauncherTheme" Height="90" Margin="0,0,0,7">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" SharedSizeGroup="Name1" />
