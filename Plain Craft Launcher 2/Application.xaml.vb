@@ -70,6 +70,20 @@ Public Class Application
             Try
                 DirectoryUtils.Create(Paths.Base & "PCL\Pictures\")
                 DirectoryUtils.Create(Paths.Base & "PCL\Musics\")
+                ' 自用版：首次运行释放内置默认壁纸
+                Try
+                    If Not DirectoryUtils.EnumerateFiles(Paths.Base & "PCL\Pictures\", True).Any() Then
+                        Dim WallpaperRes = System.Windows.Application.GetResourceStream(New Uri("Images/wallpaper.png", UriKind.Relative))
+                        If WallpaperRes IsNot Nothing Then
+                            Dim WallpaperMs As New IO.MemoryStream
+                            WallpaperRes.Stream.CopyTo(WallpaperMs)
+                            IO.File.WriteAllBytes(Paths.Base & "PCL\Pictures\AliCraftLauncher_wallpaper.png", WallpaperMs.ToArray())
+                            Logger.Info("已释放内置默认壁纸")
+                        End If
+                    End If
+                Catch ex As Exception
+                    Logger.Warn(ex, "释放内置默认壁纸失败")
+                End Try
                 CheckPermissionWithException(Paths.Base & "PCL\")
             Catch ex As Exception
                 MsgBox($"PCL 没有对当前文件夹的权限（{Paths.Base}PCL\），请尝试：" & vbCrLf &

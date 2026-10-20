@@ -750,6 +750,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\wallpaper.png" />
     <Resource Include="Images\icon.ico" />
   </ItemGroup>
   <ItemGroup>
