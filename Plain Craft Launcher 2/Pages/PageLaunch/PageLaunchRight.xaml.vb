@@ -31,7 +31,18 @@ Public Class PageLaunchRight
             Case 0
                 ' 自用版：内置品牌欢迎页
                 Logger.Info("主页自定义数据来源：内置欢迎页")
-                Content = "
+                Dim Hero As String = ""
+                If McInstanceSelected?.IsLoaded Then
+                    Hero = "
+                    <local:MyCard Margin=""0,0,0,15"">
+                        <StackPanel Margin=""25,26,25,24"">
+                            <TextBlock FontSize=""11"" Foreground=""{DynamicResource ColorBrushGray2}"" Text=""当前版本"" />
+                            <TextBlock FontSize=""36"" FontWeight=""Bold"" Margin=""0,2,0,2"" Foreground=""{DynamicResource ColorBrush1}"" TextTrimming=""CharacterEllipsis"" Text=""{version}"" />
+                            <TextBlock FontSize=""12"" Foreground=""{DynamicResource ColorBrushGray2}"" TextTrimming=""CharacterEllipsis"" Text=""{name}"" />
+                        </StackPanel>
+                    </local:MyCard>"
+                End If
+                Content = Hero & "
                     <local:MyCard Title=""欢迎使用 AliCraftLauncher"" Margin=""0,0,0,15"">
                         <StackPanel Margin=""25,40,25,20"">
                             <TextBlock TextWrapping=""Wrap"" FontSize=""14"" Margin=""0,0,0,10"" Foreground=""{DynamicResource ColorBrush1}"" Text=""欢迎回来！这是一个简洁美观的 Minecraft 启动器，基于开源的 Plain Craft Launcher 二次开发。"" />
