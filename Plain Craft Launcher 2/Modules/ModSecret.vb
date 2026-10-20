@@ -70,6 +70,43 @@ Friend Module ModSecret
             If ThemeNow = NewTheme AndAlso NewTheme >= 0 Then Return
             If NewTheme >= 0 Then ThemeNow = NewTheme
 
+            ' 自用版：补回"主题预设 -> 色相/饱和度/亮度"映射（原 ThemeCheckAll 被上游移除）
+            Select Case Settings.Get(Of Integer)("UiLauncherTheme")
+                Case 0 ' 龙猫蓝
+                    ColorHue = 210 : ColorSat = 85 : ColorLightAdjust = 0
+                Case 1 ' 甜柠青
+                    ColorHue = 180 : ColorSat = 80 : ColorLightAdjust = 0
+                Case 2 ' 小草绿
+                    ColorHue = 130 : ColorSat = 70 : ColorLightAdjust = 0
+                Case 3 ' 菠萝黄
+                    ColorHue = 45 : ColorSat = 85 : ColorLightAdjust = 0
+                Case 4 ' 橡木棕
+                    ColorHue = 28 : ColorSat = 45 : ColorLightAdjust = -2
+                Case 5 ' 玄素黑
+                    ColorHue = 210 : ColorSat = 8 : ColorLightAdjust = -6
+                Case 6 ' 铁杆粉
+                    ColorHue = 330 : ColorSat = 70 : ColorLightAdjust = 0
+                Case 7 ' 神秘紫
+                    ColorHue = 265 : ColorSat = 70 : ColorLightAdjust = 0
+                Case 8 ' 秋仪金
+                    ColorHue = 40 : ColorSat = 80 : ColorLightAdjust = 2
+                Case 9 ' 活跃橙
+                    ColorHue = 25 : ColorSat = 90 : ColorLightAdjust = 0
+                Case 10 ' 跳票红
+                    ColorHue = 355 : ColorSat = 80 : ColorLightAdjust = 0
+                Case 11 ' 极客蓝
+                    ColorHue = 215 : ColorSat = 90 : ColorLightAdjust = 0
+                Case 12 ' 滑稽彩
+                    ColorHue = 280 : ColorSat = 90 : ColorLightAdjust = 0
+                Case 13 ' 欧皇彩
+                    ColorHue = 320 : ColorSat = 85 : ColorLightAdjust = 0
+                Case Else ' 自定义
+                    ColorHue = Settings.Get(Of Integer)("UiLauncherHue")
+                    ColorSat = Settings.Get(Of Integer)("UiLauncherSat")
+                    ColorLightAdjust = Settings.Get(Of Integer)("UiLauncherLight") - 20
+            End Select
+            ColorHueTopbarDelta = Settings.Get(Of Integer)("UiLauncherDelta") \ 10
+
             If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
                 Color1 = New MyColor().FromHSL2(ColorHue, ColorSat * 0.1, 94)
                 Color2 = New MyColor().FromHSL2(ColorHue, ColorSat, 62)
