@@ -4,8 +4,8 @@ Public Class Settings
 
     Public Shared ReadOnly Entries As Dictionary(Of String, Setting) = (New List(Of Setting) From {
         New Setting("Identify", "", Source:=Sources.Registry),
-        New Setting("WindowHeight", 550),
-        New Setting("WindowWidth", 900),
+        New Setting("WindowHeight", 620),
+        New Setting("WindowWidth", 1000),
         New Setting("AprilYear", 0, Source:=Sources.Registry, Encrypted:=True),
         New Setting("HintDownloadThread", False, Source:=Sources.Registry),
         New Setting("HintNotice", 0, Source:=Sources.Registry),
