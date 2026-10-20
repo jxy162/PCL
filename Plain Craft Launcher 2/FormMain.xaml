@@ -88,7 +88,7 @@
         </Rectangle>
         <Border Margin="8" x:Name="BorderForm">
             <Border.Clip>
-                <RectangleGeometry x:Name="RectForm" RadiusX="6" RadiusY="6" />
+                <RectangleGeometry x:Name="RectForm" RadiusX="12" RadiusY="12" />
             </Border.Clip>
             <Grid x:Name="PanForm" SnapsToDevicePixels="False" UseLayoutRounding="False">
                 <Grid.RowDefinitions>

@@ -64,10 +64,10 @@ Public Class MyCard
     'UI 建立
     Public Sub New()
         MainChrome = New MyDropShadow With {
-            .Margin = New Thickness(-3, -3, -3, -3 - GetWPFSize(1)), .ShadowRadius = 3, .Opacity = DropShadowIdleOpacity, .CornerRadius = New CornerRadius(5)}
+            .Margin = New Thickness(-3, -3, -3, -3 - GetWPFSize(1)), .ShadowRadius = 3, .Opacity = DropShadowIdleOpacity, .CornerRadius = New CornerRadius(12)}
         MainChrome.SetResourceReference(MyDropShadow.ColorProperty, "ColorObject1")
         Children.Insert(0, MainChrome)
-        MainBorder = New Border With {.CornerRadius = New CornerRadius(5), .IsHitTestVisible = False}
+        MainBorder = New Border With {.CornerRadius = New CornerRadius(12), .IsHitTestVisible = False}
         MainBorder.SetResourceReference(Border.BackgroundProperty, "ColorBrushCard")
         Children.Insert(1, MainBorder)
         MainGrid = New Grid
