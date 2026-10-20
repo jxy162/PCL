@@ -53,16 +53,16 @@ git clone --recursive https://github.com/jxy162/PCL.git
 cd PCL
 dotnet restore PCLCS\PCLCS.csproj
 & "C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Current\Bin\MSBuild.exe" `
-    "Plain Craft Launcher 2\Plain Craft Launcher 2.vbproj" -p:Configuration=Release
+    "AliCraftLauncher\AliCraftLauncher.vbproj" -p:Configuration=Release
 ```
 
-产物路径：`Plain Craft Launcher 2\bin\AliCraftLauncher.exe`
+产物路径：`AliCraftLauncher\bin\AliCraftLauncher.exe`
 
 ## 目录结构
 
 | 目录 | 说明 |
 | --- | --- |
-| `Plain Craft Launcher 2/` | 主程序（VB.NET + WPF） |
+| `AliCraftLauncher/` | 主程序（VB.NET + WPF） |
 | `PCLCS/` | 启动核心与通用能力（C#） |
 | `MeloongCore/` | 通用库（子模块，C#） |
 | `Assets/` | 品牌资源（LOGO 等） |

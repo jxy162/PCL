@@ -2,11 +2,11 @@ name: Build
 on:
   push:
     paths:
-      - 'Plain Craft Launcher 2/**'
+      - 'AliCraftLauncher/**'
       - '.github/workflows/**'
   pull_request:
     paths:
-      - 'Plain Craft Launcher 2/**'
+      - 'AliCraftLauncher/**'
       - '.github/workflows/**'
   workflow_dispatch:
 
@@ -44,7 +44,7 @@ jobs:
         Set-Location PCL2Help
         Remove-Item -Path *.* -Recurse -Force
         Compress-Archive -Path .\* -DestinationPath .\Help.zip
-        Copy-Item -Path .\Help.zip -Destination "${{ GITHUB.WORKSPACE }}\Plain Craft Launcher 2\Resources\Help.zip" -Force
+        Copy-Item -Path .\Help.zip -Destination "${{ GITHUB.WORKSPACE }}\AliCraftLauncher\Resources\Help.zip" -Force
         Set-Location ..
         Remove-Item PCL2Help -Recurse -Force
         Set-Location ${{ GITHUB.WORKSPACE }}
@@ -52,18 +52,18 @@ jobs:
 
     - name: Replace
       run: |
-        (gc "Plain Craft Launcher 2\Modules\ModSecret.vb") -replace 'Public OAuthClientId As String = If(Environment.GetEnvironmentVariable("PCL_MS_CLIENT_ID"), "")', 'Public OAuthClientId As String = If(Environment.GetEnvironmentVariable("PCL_MS_CLIENT_ID"), "${{ secrets.CLIENT_ID }}")' | Out-File "Plain Craft Launcher 2\Modules\ModSecret.vb"
-        (gc "Plain Craft Launcher 2\Modules\ModSecret.vb") -replace 'Public CurseForgeAPIKey As String = If(Environment.GetEnvironmentVariable("PCL_CURSEFORGE_API_KEY"), "")', 'Public CurseForgeAPIKey As String = If(Environment.GetEnvironmentVariable("PCL_CURSEFORGE_API_KEY"), "${{ secrets.CURSEFORGE_API_KEY }}")' | Out-File "Plain Craft Launcher 2\Modules\ModSecret.vb"
-        (gc "Plain Craft Launcher 2\Modules\Base\ModBase.vb") -replace 'Public Const CommitHash As String = ""', 'Public Const CommitHash As String = "${{ github.sha }}"' | Out-File "Plain Craft Launcher 2\Modules\Base\ModBase.vb"
+        (gc "AliCraftLauncher\Modules\ModSecret.vb") -replace 'Public OAuthClientId As String = If(Environment.GetEnvironmentVariable("PCL_MS_CLIENT_ID"), "")', 'Public OAuthClientId As String = If(Environment.GetEnvironmentVariable("PCL_MS_CLIENT_ID"), "${{ secrets.CLIENT_ID }}")' | Out-File "AliCraftLauncher\Modules\ModSecret.vb"
+        (gc "AliCraftLauncher\Modules\ModSecret.vb") -replace 'Public CurseForgeAPIKey As String = If(Environment.GetEnvironmentVariable("PCL_CURSEFORGE_API_KEY"), "")', 'Public CurseForgeAPIKey As String = If(Environment.GetEnvironmentVariable("PCL_CURSEFORGE_API_KEY"), "${{ secrets.CURSEFORGE_API_KEY }}")' | Out-File "AliCraftLauncher\Modules\ModSecret.vb"
+        (gc "AliCraftLauncher\Modules\Base\ModBase.vb") -replace 'Public Const CommitHash As String = ""', 'Public Const CommitHash As String = "${{ github.sha }}"' | Out-File "AliCraftLauncher\Modules\Base\ModBase.vb"
         
     - name: Restore NuGet Packages
       run: dotnet restore PCLCS\PCLCS.csproj
 
     - name: Build
-      run: msbuild "Plain Craft Launcher 2\Plain Craft Launcher 2.vbproj" -p:Configuration=${{ matrix.configuration }}
+      run: msbuild "AliCraftLauncher\AliCraftLauncher.vbproj" -p:Configuration=${{ matrix.configuration }}
 
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.configuration }} ${{ env.describe }}
-        path: Plain Craft Launcher 2\obj\${{ matrix.configuration }}\AliCraftLauncher.exe
+        path: AliCraftLauncher\obj\${{ matrix.configuration }}\AliCraftLauncher.exe
