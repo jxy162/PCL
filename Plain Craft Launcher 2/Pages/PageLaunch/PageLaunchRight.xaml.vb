@@ -28,6 +28,38 @@ Public Class PageLaunchRight
     Private Sub RefreshReal()
         Dim Content As String = Nothing, Url As String = Nothing
         Select Case Settings.Get(Of Integer)("UiCustomType")
+            Case 0
+                ' 自用版：内置品牌欢迎页
+                Logger.Info("主页自定义数据来源：内置欢迎页")
+                Content = "
+                    <local:MyCard Title=""欢迎使用 AliCraftLauncher"" Margin=""0,0,0,15"">
+                        <StackPanel Margin=""25,40,25,20"">
+                            <TextBlock TextWrapping=""Wrap"" FontSize=""14"" Margin=""0,0,0,10"" Foreground=""{DynamicResource ColorBrush1}"" Text=""欢迎回来！这是一个简洁美观的 Minecraft 启动器，基于开源的 Plain Craft Launcher 二次开发。"" />
+                            <TextBlock TextWrapping=""Wrap"" FontSize=""13"" Margin=""0,0,0,14"" Foreground=""{DynamicResource ColorBrushGray2}"" Text=""选择左侧的版本卡片，然后点击右上角「启动」即可开始游戏。还没有版本的话，先去「下载」页安装一个吧。"" />
+                            <StackPanel Orientation=""Horizontal"">
+                                <local:MyButton Text=""开始游戏"" ColorType=""Highlight"" MinWidth=""120"" Height=""34"" Padding=""13,0"" Margin=""0,0,12,0"" EventType=""启动游戏"" EventData=""\current"" />
+                                <local:MyButton Text=""下载游戏"" MinWidth=""120"" Height=""34"" Padding=""13,0"" Margin=""0,0,12,0"" EventType=""切换页面"" EventData=""Download|DownloadInstall"" />
+                                <local:MyButton Text=""版本设置"" MinWidth=""120"" Height=""34"" Padding=""13,0"" EventType=""切换页面"" EventData=""InstanceSelect"" />
+                            </StackPanel>
+                        </StackPanel>
+                    </local:MyCard>
+                    <local:MyCard Title=""快速上手"" Margin=""0,0,0,15"">
+                        <StackPanel Margin=""25,40,25,20"">
+                            <TextBlock TextWrapping=""Wrap"" Margin=""0,0,0,6"" Foreground=""{DynamicResource ColorBrush1}"" Text=""1. 在「下载」页安装 Minecraft 版本，支持原版 / Forge / NeoForge / Fabric / LiteLoader / OptiFine。"" />
+                            <TextBlock TextWrapping=""Wrap"" Margin=""0,0,0,6"" Foreground=""{DynamicResource ColorBrush1}"" Text=""2. 在「版本设置」中管理模组、资源包、材质包与 Java。"" />
+                            <TextBlock TextWrapping=""Wrap"" Foreground=""{DynamicResource ColorBrush1}"" Text=""3. 导入整合包：直接把压缩包拖进窗口即可开始安装。"" />
+                        </StackPanel>
+                    </local:MyCard>
+                    <local:MyCard Title=""关于与致谢"" CanSwap=""True"" IsSwapped=""True"" Margin=""0,0,0,15"">
+                        <StackPanel Margin=""25,40,25,20"">
+                            <TextBlock TextWrapping=""Wrap"" Margin=""0,0,0,12"" Foreground=""{DynamicResource ColorBrush1}"" Text=""本启动器基于开源项目 Plain Craft Launcher（PCL）二次开发，核心代码版权归原作者龙腾猫跃（LTCat）及 PCL 社区贡献者所有，特此致谢。"" />
+                            <StackPanel Orientation=""Horizontal"">
+                                <local:MyButton Text=""PCL 项目主页"" MinWidth=""130"" Height=""34"" Padding=""13,0"" Margin=""0,0,12,0"" EventType=""打开网页"" EventData=""https://github.com/Meloong-Git/PCL"" />
+                                <local:MyButton Text=""帮助文档"" MinWidth=""120"" Height=""34"" Padding=""13,0"" Margin=""0,0,12,0"" EventType=""切换页面"" EventData=""Other|OtherHelp"" />
+                                <local:MyButton Text=""关于"" MinWidth=""110"" Height=""34"" Padding=""13,0"" EventType=""切换页面"" EventData=""Other|OtherAbout"" />
+                            </StackPanel>
+                        </StackPanel>
+                    </local:MyCard>"
             Case 1
                 '加载本地文件
                 Logger.Info("主页自定义数据来源：本地文件")
