@@ -108,7 +108,6 @@ Friend Module ModGamepad
 
     ''' <summary>重新开始一轮按键判定，用于鼠标介入后避免残留状态。</summary>
     Public Sub ResetState()
-        LastButtons = 0
         RepeatAction = PadAction.None
         PadActive = False
     End Sub
@@ -198,9 +197,10 @@ Friend Module ModGamepad
 
     Private Sub RaisePad(Act As PadAction)
         If Act = PadAction.None Then Return
-        PadActive = True
         RunInUi(
         Sub()
+            If FrmMain Is Nothing OrElse Not FrmMain.IsActive Then Return
+            PadActive = True
             RaiseEvent ActionReceived(Act)
         End Sub)
     End Sub

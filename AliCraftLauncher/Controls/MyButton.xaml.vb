@@ -200,6 +200,12 @@ Public Class MyButton
         Catch
         End Try
     End Sub
+    '手柄确认：与鼠标点击语义一致
+    Public Sub FocusActivate()
+        If Not IsEnabled Then Return
+        RaiseEvent Click(Me, ModFocusNav.CreateClickArgs(Me))
+        RaiseCustomEvent()
+    End Sub
     Private Sub Button_MouseEnter() Handles Me.MouseEnter
         If Not IsEnabled Then Return '禁用态保持灰底，由 RefreshColor 统一控制
         Dim HoverBack As String = If(_ColorType = ColorState.Red, "ColorBrushRedBack", If(_ColorType = ColorState.Highlight, "ColorBrush2", "ColorBrush7"))

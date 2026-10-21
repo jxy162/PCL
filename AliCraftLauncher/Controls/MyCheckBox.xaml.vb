@@ -131,6 +131,10 @@ Public Class MyCheckBox
 
     Private MouseDowned As Boolean = False
     Private AllowMouseDown As Boolean = True
+    '手柄确认：与鼠标点击语义一致
+    Public Sub FocusActivate()
+        SetChecked(Not Checked, True)
+    End Sub
     Private Sub Checkbox_MouseUp() Handles Me.MouseLeftButtonUp
         If Not MouseDowned Then Return
         Logger.Info($"按下复选框（{(Not Checked)}）：{Text}")

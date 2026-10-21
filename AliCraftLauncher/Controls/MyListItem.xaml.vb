@@ -503,6 +503,18 @@ Public Class MyListItem
 #Region "点击"
 
     '触发点击事件
+    '手柄确认：先触发 Click，未处理时执行单选 / 复选切换
+    Public Sub FocusActivate()
+        Dim ClickArgs = ModFocusNav.CreateClickArgs(Me)
+        RaiseEvent Click(Me, ClickArgs)
+        If ClickArgs.Handled Then Return
+        Select Case Type
+            Case CheckType.RadioBox
+                If Not Checked Then SetChecked(True, True, True)
+            Case CheckType.CheckBox
+                SetChecked(Not Checked, True, True)
+        End Select
+    End Sub
     Private Sub Button_MouseUp(sender As Object, e As MouseButtonEventArgs) Handles Me.PreviewMouseLeftButtonUp
         If Not IsMouseDown Then Return
         RaiseEvent Click(sender, e)

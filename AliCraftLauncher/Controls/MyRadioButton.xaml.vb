@@ -142,6 +142,14 @@ Public Class MyRadioButton
 
     Public Event PreviewClick(sender As Object, e As RouteEventArgs)
     Private IsMouseDown As Boolean = False
+    '手柄确认：与鼠标点击语义一致
+    Public Sub FocusActivate()
+        If Checked Then Return
+        Dim e As New RouteEventArgs(True)
+        RaiseEvent PreviewClick(Me, e)
+        If e.Handled Then Return
+        SetChecked(True, True, True)
+    End Sub
     Private Sub Radiobox_MouseUp() Handles Me.MouseLeftButtonUp
         If Checked Then Return
         If Not IsMouseDown Then Return

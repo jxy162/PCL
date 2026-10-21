@@ -711,6 +711,7 @@
     <Compile Include="Modules\ModMain.vb" />
     <Compile Include="Modules\Base\ModBase.vb" />
     <Compile Include="Modules\Base\ModGamepad.vb" />
+    <Compile Include="Modules\Base\ModFocusNav.vb" />
     <Compile Include="My Project\AssemblyInfo.vb">
       <SubType>Code</SubType>
     </Compile>

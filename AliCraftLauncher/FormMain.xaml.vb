@@ -349,6 +349,8 @@ Public Class FormMain
     Private Sub FormMain_Loaded(sender As Object, e As RoutedEventArgs) Handles Me.Loaded
         ApplicationStartTick = GetTimeMs()
         Handle = New WindowInteropHelper(Me).Handle
+        AddHandler ModGamepad.ActionReceived, AddressOf OnPadAction
+        ModGamepad.Start()
         '读取设置
         UpdateBackgroundAndTitleBar()
         PageSetupUI.HiddenRefresh()
@@ -670,7 +672,7 @@ Public Class FormMain
     Private FsLastState As WindowState = WindowState.Normal
     Private FsLastLeft As Double, FsLastTop As Double, FsLastWidth As Double, FsLastHeight As Double
     Private FsLastResize As ResizeMode = ResizeMode.CanResize
-    Private FsOnHome As Boolean = True
+    Public FsOnHome As Boolean = True
     Private FsSyncingNav As Boolean = False
     Private Const FsNavHeight As Double = 76
 
@@ -779,6 +781,7 @@ Public Class FormMain
         Try
             If Not IsFullscreenMode Then Return
             IsFullscreenMode = False
+            ModFocusNav.ClearFocus()
             PanFullscreen.Visibility = Visibility.Collapsed
             PanFullscreen.Opacity = 1
             PanTitle.Visibility = Visibility.Visible
@@ -840,6 +843,7 @@ Public Class FormMain
             }, "FsPage")
             UpdateFullscreenLayout()
             UpdateFullscreenContent()
+            RefreshFsFocusLater()
         Catch ex As Exception
             Logger.Warn(ex, "显示全屏主页失败")
         End Try
@@ -852,6 +856,7 @@ Public Class FormMain
             SyncFsNav(Target)
             PageChange(Target)
             UpdateFullscreenLayout()
+            RefreshFsFocusLater()
             AniStart({
                 AaOpacity(PanFsHome, -PanFsHome.Opacity, 140),
                 AaCode(Sub()
@@ -865,48 +870,76 @@ Public Class FormMain
         End Try
     End Sub
 
-    Private Sub FsTile_MouseEnter(sender As Object, e As MouseEventArgs) Handles TileFsLaunch.MouseEnter, TileFsDownload.MouseEnter, TileFsInstance.MouseEnter, TileFsSetup.MouseEnter
-        FsTileHover(CType(sender, Border), True)
-    End Sub
-    Private Sub FsTile_MouseLeave(sender As Object, e As MouseEventArgs) Handles TileFsLaunch.MouseLeave, TileFsDownload.MouseLeave, TileFsInstance.MouseLeave, TileFsSetup.MouseLeave
-        FsTileHover(CType(sender, Border), False)
-    End Sub
-    Private Sub FsTileHover(Target As Border, IsIn As Boolean)
-        Try
-            If TypeOf Target.RenderTransform IsNot ScaleTransform Then
-                Target.RenderTransform = New ScaleTransform(1, 1)
-                Target.RenderTransformOrigin = New Point(0.5, 0.5)
-            End If
-            Dim Sc = CType(Target.RenderTransform, ScaleTransform)
-            If IsIn Then
-                AniStart({
-                    AaScaleTransform(Target, 1.08 - Sc.ScaleX, 220,, New AniEaseOutBack(AniEasePower.Weak)),
-                    AaColor(Target, Border.BackgroundProperty, New MyColor(64, 255, 255, 255) - Target.Background, 180),
-                    AaColor(Target, Border.BorderBrushProperty, New MyColor(200, 155, 232, 160) - Target.BorderBrush, 180)
-                }, "FsTileHover " & Target.Name)
-            Else
-                AniStart({
-                    AaScaleTransform(Target, 1 - Sc.ScaleX, 260,, New AniEaseOutFluent),
-                    AaColor(Target, Border.BackgroundProperty, New MyColor(38, 255, 255, 255) - Target.Background, 220),
-                    AaColor(Target, Border.BorderBrushProperty, New MyColor(60, 255, 255, 255) - Target.BorderBrush, 220)
-                }, "FsTileHover " & Target.Name)
-            End If
-        Catch ex As Exception
-            Logger.Warn(ex, "全屏卡片悬停动效失败")
-        End Try
-    End Sub
-
     Private Sub TileFsLaunch_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsLaunch.MouseLeftButtonUp
-        FrmLaunchLeft.LaunchButtonClick()
+        ActivateFsCard(sender)
     End Sub
     Private Sub TileFsDownload_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsDownload.MouseLeftButtonUp
-        ShowFsPage(PageType.Download)
+        ActivateFsCard(sender)
     End Sub
     Private Sub TileFsInstance_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsInstance.MouseLeftButtonUp
-        ShowFsPage(PageType.InstanceSelect)
+        ActivateFsCard(sender)
     End Sub
     Private Sub TileFsSetup_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsSetup.MouseLeftButtonUp
-        ShowFsPage(PageType.Setup)
+        ActivateFsCard(sender)
+    End Sub
+
+    ''' <summary>执行全屏主页卡片对应的操作，鼠标点击与手柄确认共用。</summary>
+    Public Sub ActivateFsCard(Card As Object)
+        Select Case CType(Card, FrameworkElement).Name
+            Case "TileFsLaunch" : FrmLaunchLeft.LaunchButtonClick()
+            Case "TileFsDownload" : ShowFsPage(PageType.Download)
+            Case "TileFsInstance" : ShowFsPage(PageType.InstanceSelect)
+            Case "TileFsSetup" : ShowFsPage(PageType.Setup)
+        End Select
+    End Sub
+
+    ''' <summary>等布局完成后刷新焦点，保证新显示的元素尺寸已确定。</summary>
+    Private Sub RefreshFsFocusLater()
+        Dispatcher.BeginInvoke(Sub() ModFocusNav.RefreshFocus(), Windows.Threading.DispatcherPriority.Loaded)
+    End Sub
+
+    ''' <summary>手柄返回键：与 Esc 语义一致，先处理弹窗，再逐级返回。</summary>
+    Private Sub PadBack()
+        If PanMsg.Children.Count > 0 Then
+            Dim Msg As Object = PanMsg.Children(0)
+            If TypeOf Msg IsNot MyMsgInput AndAlso TypeOf Msg IsNot MyMsgSelect AndAlso Msg.Btn3.Visibility = Visibility.Visible Then
+                Msg.Btn3_Click()
+            ElseIf Msg.Btn2.Visibility = Visibility.Visible Then
+                Msg.Btn2_Click()
+            Else
+                Msg.Btn1_Click()
+            End If
+            Return
+        End If
+        If IsFullscreenMode Then
+            If FsOnHome Then ExitFullscreenMode() Else ShowFsHome()
+        ElseIf PageCurrent = FormMain.PageType.Launch AndAlso McLaunchLoader.State = LoadState.Loading Then
+            FrmLaunchLeft.BtnCancel_Click()
+        Else
+            TriggerPageBack()
+        End If
+    End Sub
+
+    ''' <summary>处理手柄动作：方向键移动焦点，A 确认，B 返回，菜单键切换全屏，肩键切换导航页。</summary>
+    Private Sub OnPadAction(Act As ModGamepad.PadAction)
+        Try
+            Select Case Act
+                Case ModGamepad.PadAction.Up, ModGamepad.PadAction.Down, ModGamepad.PadAction.Left, ModGamepad.PadAction.Right
+                    ModFocusNav.MoveFocus(Act)
+                Case ModGamepad.PadAction.Accept
+                    ModFocusNav.ActivateFocused()
+                Case ModGamepad.PadAction.Back
+                    PadBack()
+                Case ModGamepad.PadAction.Menu
+                    ToggleFullscreen()
+                Case ModGamepad.PadAction.PageLeft
+                    ModFocusNav.SwitchPage(False)
+                Case ModGamepad.PadAction.PageRight
+                    ModFocusNav.SwitchPage(True)
+            End Select
+        Catch ex As Exception
+            Logger.Warn(ex, "处理手柄输入失败")
+        End Try
     End Sub
 
     ''' <summary>刷新全屏页显示的版本与账号。</summary>
@@ -2058,6 +2091,12 @@ Public Class FormMain
     Public lastMouseArg As MouseEventArgs = Nothing
     Private Sub FormMain_MouseMove(sender As Object, e As MouseEventArgs) Handles Me.MouseMove
         lastMouseArg = e
+        If IsFullscreenMode Then
+            ModFocusNav.FocusUnderMouse(e.OriginalSource)
+        ElseIf ModGamepad.PadActive Then
+            ModGamepad.ResetState()
+            ModFocusNav.ClearFocus()
+        End If
     End Sub
 
 End Class

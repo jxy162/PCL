@@ -80,6 +80,12 @@ Public Class MyIconButton
         End If
         RefreshAnim() '直接刷新颜色以判断是否已触发 MouseLeave
     End Sub
+    '手柄确认：与鼠标点击语义一致
+    Public Sub FocusActivate()
+        If Not CanClick Then Return
+        RaiseEvent Click(Me, New EventArgs())
+        RaiseCustomEvent()
+    End Sub
     Private Sub Button_MouseLeave() Handles Me.MouseLeave
         If Not CanClick Then Return
         IsMouseDown = False

@@ -221,29 +221,29 @@
                                 <TextBlock x:Name="LabFsLaunchProgress" Text="0.00 %" FontSize="14" Foreground="#9BE8A0" VerticalAlignment="Center" Margin="14,0,0,0" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,34,0,0">
-                                <Border x:Name="TileFsLaunch" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
-                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
+                                <Border x:Name="TileFsLaunch" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Tag="FsCard" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><TransformGroup><ScaleTransform ScaleX="1" ScaleY="1" /><TranslateTransform X="0" Y="0" /></TransformGroup></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <Path Data="F1 M4,2 L28,16 L4,30 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
                                         <TextBlock Text="开始游戏" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
                                     </StackPanel>
                                 </Border>
-                                <Border x:Name="TileFsDownload" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
-                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
+                                <Border x:Name="TileFsDownload" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Tag="FsCard" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><TransformGroup><ScaleTransform ScaleX="1" ScaleY="1" /><TranslateTransform X="0" Y="0" /></TransformGroup></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <Path Data="F1 M13,2 H19 V18 H28 L16,31 L4,18 H13 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
                                         <TextBlock Text="下载游戏" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
                                     </StackPanel>
                                 </Border>
-                                <Border x:Name="TileFsInstance" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
-                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
+                                <Border x:Name="TileFsInstance" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Tag="FsCard" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><TransformGroup><ScaleTransform ScaleX="1" ScaleY="1" /><TranslateTransform X="0" Y="0" /></TransformGroup></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <Path Data="F1 M4,5 H28 V10 H4 Z M4,14 H28 V19 H4 Z M4,23 H28 V28 H4 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
                                         <TextBlock Text="版本管理" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
                                     </StackPanel>
                                 </Border>
-                                <Border x:Name="TileFsSetup" Width="166" Height="124" CornerRadius="16" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
-                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
+                                <Border x:Name="TileFsSetup" Width="166" Height="124" CornerRadius="16" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Tag="FsCard" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><TransformGroup><ScaleTransform ScaleX="1" ScaleY="1" /><TranslateTransform X="0" Y="0" /></TransformGroup></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
                                         <Path Data="F1 M16,9 A7,7 0 1 1 15.9,9 Z M14,1 H18 V6 H14 Z M14,26 H18 V31 H14 Z M1,14 H6 V18 H1 Z M26,14 H31 V18 H26 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
                                         <TextBlock Text="设置" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
