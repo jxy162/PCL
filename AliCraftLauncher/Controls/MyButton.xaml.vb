@@ -40,7 +40,13 @@ Public Class MyButton
         End Get
         Set(value As ColorState)
             _ColorType = value
-            If PanFore IsNot Nothing AndAlso value = ColorState.Highlight Then PanFore.SetResourceReference(Border.BackgroundProperty, "ColorBrush3")
+            If PanFore IsNot Nothing Then
+                If value = ColorState.Highlight Then
+                    PanFore.SetResourceReference(Border.BackgroundProperty, "ColorBrush3")
+                Else
+                    RestoreBackground()
+                End If
+            End If
             RefreshColor()
         End Set
     End Property
@@ -79,14 +85,21 @@ Public Class MyButton
                 If IsEnabled Then
                     Select Case ColorType
                         Case ColorState.Normal
+                            '悬停时背景由 Button_MouseEnter 动画接管，此处不要抢回常态背景
+                            If Not IsMouseOver Then RestoreBackground()
                             If IsMouseOver Then
                                 '指向（Main 3）
                                 AniStart({AaColor(PanFore, Border.BorderBrushProperty, "ColorBrush3", AnimationColorIn)}, "MyButton Color " & Uuid)
+                                SetTextColor("ColorBrush3")
                             Else
                                 '普通（Main 1）
                                 AniStart({AaColor(PanFore, Border.BorderBrushProperty, "ColorBrush1", AnimationColorOut)}, "MyButton Color " & Uuid)
+                                SetTextColor("ColorBrush1")
                             End If
                         Case ColorState.Highlight
+                            '填充主按钮：文字改用对比度固定的 OnAccent，而不是跟随边框色
+                            If Not IsMouseOver Then RestoreBackground()
+                            SetTextColor("ColorBrushOnAccent")
                             If IsMouseOver Then
                                 '指向（Main 3）
                                 AniStart({AaColor(PanFore, Border.BorderBrushProperty, "ColorBrush3", AnimationColorIn)}, "MyButton Color " & Uuid)
@@ -95,17 +108,22 @@ Public Class MyButton
                                 AniStart({AaColor(PanFore, Border.BorderBrushProperty, "ColorBrush2", AnimationColorOut)}, "MyButton Color " & Uuid)
                             End If
                         Case ColorState.Red
+                            If Not IsMouseOver Then RestoreBackground()
                             If IsMouseOver Then
                                 '红色指向
                                 AniStart({AaColor(PanFore, Border.BorderBrushProperty, "ColorBrushRedLight", AnimationColorIn)}, "MyButton Color " & Uuid)
+                                SetTextColor("ColorBrushRedDark")
                             Else
                                 '红色
                                 AniStart({AaColor(PanFore, Border.BorderBrushProperty, "ColorBrushRedDark", AnimationColorOut)}, "MyButton Color " & Uuid)
+                                SetTextColor("ColorBrushRedDark")
                             End If
                     End Select
                 Else
-                    '不可用（Gray 4）
-                    AniStart({AaColor(PanFore, Border.BorderBrushProperty, ColorGray4 - PanFore.BorderBrush, AnimationColorOut)}, "MyButton Color " & Uuid)
+                    '不可用：不再保留强调色填充，避免文字与底色同时变淡而无法辨认
+                    AniStart({AaColor(PanFore, Border.BorderBrushProperty, "ColorBrushGray4", AnimationColorOut)}, "MyButton Color " & Uuid)
+                    PanFore.SetResourceReference(Border.BackgroundProperty, "ColorBrushDisabledBack")
+                    SetTextColor("ColorBrushDisabledFore")
                 End If
             Else
 
@@ -113,24 +131,32 @@ Public Class MyButton
                 If IsEnabled Then
                     Select Case ColorType
                         Case ColorState.Normal
+                            RestoreBackground()
                             If IsMouseOver Then
                                 PanFore.SetResourceReference(Border.BorderBrushProperty, "ColorBrush3")
+                                SetTextColor("ColorBrush3")
                             Else
                                 PanFore.SetResourceReference(Border.BorderBrushProperty, "ColorBrush1")
+                                SetTextColor("ColorBrush1")
                             End If
                         Case ColorState.Highlight
-                            'M3 填充主按钮：边框取文字色，背景取强调色
+                            'M3 填充主按钮：背景取强调色，文字取固定的 OnAccent
                             PanFore.SetResourceReference(Border.BorderBrushProperty, "ColorBrush1")
                             PanFore.SetResourceReference(Border.BackgroundProperty, If(IsMouseOver, "ColorBrush2", "ColorBrush3"))
+                            SetTextColor("ColorBrushOnAccent")
                         Case ColorState.Red
+                            RestoreBackground()
                             If IsMouseOver Then
                                 PanFore.SetResourceReference(Border.BorderBrushProperty, "ColorBrushRedLight")
                             Else
                                 PanFore.SetResourceReference(Border.BorderBrushProperty, "ColorBrushRedDark")
                             End If
+                            SetTextColor("ColorBrushRedDark")
                     End Select
                 Else
-                    PanFore.BorderBrush = ColorGray4
+                    PanFore.SetResourceReference(Border.BorderBrushProperty, "ColorBrushGray4")
+                    PanFore.SetResourceReference(Border.BackgroundProperty, "ColorBrushDisabledBack")
+                    SetTextColor("ColorBrushDisabledFore")
                 End If
 
             End If
@@ -159,6 +185,14 @@ Public Class MyButton
     Private Sub MyButton_Loaded() Handles Me.Loaded
         If _ColorType = ColorState.Highlight Then PanFore.SetResourceReference(Border.BackgroundProperty, "ColorBrush3")
     End Sub
+    ''' <summary>切换文字颜色；使用资源引用以便主题切换时自动跟随。</summary>
+    Private Sub SetTextColor(Res As String)
+        LabText.SetResourceReference(TextBlock.ForegroundProperty, Res)
+    End Sub
+    ''' <summary>恢复当前配色方案对应的常态背景（强调色填充或半透明白）。</summary>
+    Private Sub RestoreBackground()
+        PanFore.SetResourceReference(Border.BackgroundProperty, If(_ColorType = ColorState.Highlight, "ColorBrush3", "ColorBrushHalfWhite"))
+    End Sub
     'M3 Expressive：胶囊按钮（圆角 = 高度一半）
     Private Sub MyButton_SizeChanged() Handles Me.SizeChanged
         Try
@@ -167,6 +201,7 @@ Public Class MyButton
         End Try
     End Sub
     Private Sub Button_MouseEnter() Handles Me.MouseEnter
+        If Not IsEnabled Then Return '禁用态保持灰底，由 RefreshColor 统一控制
         Dim HoverBack As String = If(_ColorType = ColorState.Red, "ColorBrushRedBack", If(_ColorType = ColorState.Highlight, "ColorBrush2", "ColorBrush7"))
         AniStart(AaColor(PanFore, BackgroundProperty, HoverBack, AnimationColorIn), "MyButton Background " & Uuid)
     End Sub
@@ -178,6 +213,7 @@ Public Class MyButton
            }, "MyButton Scale " & Uuid)
     End Sub
     Private Sub Button_MouseLeave() Handles Me.MouseLeave
+        If Not IsEnabled Then Return '禁用态保持灰底，由 RefreshColor 统一控制
         AniStart(AaColor(PanFore, BackgroundProperty, If(_ColorType = ColorState.Highlight, "ColorBrush3", "ColorBrushHalfWhite"), AnimationColorOut), "MyButton Background " & Uuid)
         If Not IsMouseDown Then Return
         IsMouseDown = False

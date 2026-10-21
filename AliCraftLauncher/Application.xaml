@@ -58,6 +58,11 @@
             <SolidColorBrush x:Key="ColorBrushRedBack">#80fbdddd</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBrushRedLight">#ff4c4c</SolidColorBrush>
             <SolidColorBrush x:Key="ColorBrushRedDark">#ce2111</SolidColorBrush>
+            <!-- 强调色填充上的前景色：强调色深浅随主题与自定义色相变化，文字固定白色以保证对比度 -->
+            <SolidColorBrush x:Key="ColorBrushOnAccent" Color="#ffffff" />
+            <!-- 禁用态：不再保留强调色填充，改用低饱和背景配可辨认的灰色文字 -->
+            <SolidColorBrush x:Key="ColorBrushDisabledBack" Color="#1A000000" />
+            <SolidColorBrush x:Key="ColorBrushDisabledFore" Color="#8C000000" />
             <SolidColorBrush x:Key="ColorBrushHalfWhite" Color="#55ffffff" />
             <SolidColorBrush x:Key="ColorBrushSemiWhite" Color="#bbffffff" />
             <SolidColorBrush x:Key="ColorBrushWhite" Color="#ffffff" />

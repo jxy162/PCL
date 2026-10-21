@@ -17,7 +17,7 @@ Public Class MyExtraButton
                 PanProgress.Visibility = Visibility.Collapsed
             Else
                 PanProgress.Visibility = Visibility.Visible
-                RectProgress.Rect = New Rect(0, 40 * (1 - value), 40, 40 * value)
+                RectProgress.Rect = New Rect(0, 28 * (1 - value), 32, 28 * value)
             End If
         End Set
     End Property
@@ -58,10 +58,11 @@ Public Class MyExtraButton
                 If value Then
                     '有了
                     Visibility = Visibility.Visible
+                    '高度统一到 32px，与底部栏 BtnQuickLaunch 对齐，避免撑出容器被裁切
                     AniStart({
                         AaScaleTransform(Me, 0.3 - CType(RenderTransform, ScaleTransform).ScaleX, 500, 60, New AniEaseOutFluent(AniEasePower.Weak)),
                         AaScaleTransform(Me, 0.7, 500, 60, New AniEaseOutBack(AniEasePower.Weak)),
-                        AaHeight(Me, 50 - Height, 200,, New AniEaseOutFluent(AniEasePower.Weak))
+                        AaHeight(Me, 32 - Height, 200,, New AniEaseOutFluent(AniEasePower.Weak))
                     }, "MyExtraButton MainScale " & Uuid)
                 Else
                     '没了
@@ -172,6 +173,7 @@ Public Class MyExtraButton
                 If Not IsEnabled Then
                     '禁用
                     AniStart(AaColor(PanColor, BackgroundProperty, "ColorBrushGray4", AnimationColorIn), "MyExtraButton Color " & Uuid)
+                    Path.SetResourceReference(Shapes.Path.FillProperty, "ColorBrushDisabledFore")
                 ElseIf IsMouseOver Then
                     '指向
                     AniStart(AaColor(PanColor, BackgroundProperty, "ColorBrush4", AnimationColorIn), "MyExtraButton Color " & Uuid)
@@ -185,6 +187,7 @@ Public Class MyExtraButton
                 AniStop("MyExtraButton Color " & Uuid)
                 If Not IsEnabled Then
                     PanColor.SetResourceReference(BackgroundProperty, "ColorBrushGray4")
+                    Path.SetResourceReference(Shapes.Path.FillProperty, "ColorBrushDisabledFore")
                 ElseIf IsMouseOver Then
                     PanColor.SetResourceReference(BackgroundProperty, "ColorBrush4")
                 Else

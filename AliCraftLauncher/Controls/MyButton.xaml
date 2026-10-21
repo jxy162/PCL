@@ -7,7 +7,8 @@
         <Border.RenderTransform>
             <ScaleTransform />
         </Border.RenderTransform>
-        <TextBlock TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True" TextTrimming="None" HorizontalAlignment="Center" x:Name="LabText" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Foreground="{Binding Parent.BorderBrush, RelativeSource={RelativeSource Self}}" FontSize="13" IsHitTestVisible="False">
+        <!-- 文字色由 MyButton.RefreshColor 按填充/描边状态显式设置，不再复用边框色（深色强调色下会与背景融为一体） -->
+        <TextBlock TextOptions.TextFormattingMode="Display" SnapsToDevicePixels="True" TextTrimming="None" HorizontalAlignment="Center" x:Name="LabText" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5" Foreground="{DynamicResource ColorBrush1}" FontSize="13" IsHitTestVisible="False">
             <TextBlock.RenderTransform>
                 <ScaleTransform />
             </TextBlock.RenderTransform>

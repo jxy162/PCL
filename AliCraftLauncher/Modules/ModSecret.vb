@@ -150,6 +150,16 @@ Friend Module ModSecret
             ColorBg1 = New MyColor(190, Color7)
 
             ColorSemiTransparent = New MyColor(1, Color8)
+            '强调色填充上的文字色：按 WCAG 相对亮度选择黑/白，避免浅色主题（黄、绿等）下白字与填充融在一起
+            Application.Current.Resources("ColorBrushOnAccent") = New SolidColorBrush(GetContrastForeground(Color3))
+            '禁用态配色：深色主题用半透明白，浅色主题用半透明黑
+            If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
+                Application.Current.Resources("ColorBrushDisabledBack") = New SolidColorBrush(New MyColor(26, 255, 255, 255))
+                Application.Current.Resources("ColorBrushDisabledFore") = New SolidColorBrush(New MyColor(110, 255, 255, 255))
+            Else
+                Application.Current.Resources("ColorBrushDisabledBack") = New SolidColorBrush(New MyColor(18, 0, 0, 0))
+                Application.Current.Resources("ColorBrushDisabledFore") = New SolidColorBrush(New MyColor(128, 0, 0, 0))
+            End If
             Application.Current.Resources("ColorBrush1") = New SolidColorBrush(Color1)
             Application.Current.Resources("ColorBrush2") = New SolidColorBrush(Color2)
             Application.Current.Resources("ColorBrush3") = New SolidColorBrush(Color3)
@@ -199,6 +209,23 @@ Friend Module ModSecret
             Logger.Error(ex, "刷新主题颜色失败", LogBehavior.Toast)
         End Try
     End Sub
+    ''' <summary>
+    ''' 根据背景色的相对亮度选择黑色或白色前景，保证文字/图标与填充色有足够对比度。
+    ''' </summary>
+    Public Function GetContrastForeground(Bg As MyColor) As MyColor
+        '亮度高于该阈值时改用深色文字（黄色、浅绿等浅色强调色），否则使用白色
+        If RelativeLuminance(Bg) > 0.36 Then Return New MyColor(26, 26, 26)
+        Return New MyColor(255, 255, 255)
+    End Function
+    ''' <summary>WCAG 2.x 相对亮度。</summary>
+    Public Function RelativeLuminance(Col As MyColor) As Double
+        Return 0.2126 * LinearizeColorChannel(Col.R / 255) +
+               0.7152 * LinearizeColorChannel(Col.G / 255) +
+               0.0722 * LinearizeColorChannel(Col.B / 255)
+    End Function
+    Private Function LinearizeColorChannel(V As Double) As Double
+        Return If(V <= 0.03928, V / 12.92, ((V + 0.055) / 1.055) ^ 2.4)
+    End Function
     Public Sub ThemeRefreshMain()
         RunInUi(
         Sub()

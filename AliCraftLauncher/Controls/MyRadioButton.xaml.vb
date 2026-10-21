@@ -199,10 +199,10 @@ Public Class MyRadioButton
                         End If
                     Case ColorState.Highlight
                         If Checked Then
-                            '勾选
+                            '勾选：填充为强调色，图标与文字改用 OnAccent，深浅强调色下都保持可读
                             AniStart({
-                                         AaColor(ShapeLogo, Shapes.Path.FillProperty, New MyColor(255, 255, 255) - ShapeLogo.Fill, AnimationTimeOfCheck),
-                                         AaColor(LabText, TextBlock.ForegroundProperty, New MyColor(255, 255, 255) - LabText.Foreground, AnimationTimeOfCheck)
+                                         AaColor(ShapeLogo, Shapes.Path.FillProperty, "ColorBrushOnAccent", AnimationTimeOfCheck),
+                                         AaColor(LabText, TextBlock.ForegroundProperty, "ColorBrushOnAccent", AnimationTimeOfCheck)
                                     }, "MyRadioButton Checked " & Uuid)
                             AniStart(AaColor(Me, BackgroundProperty, "ColorBrush3", AnimationTimeOfCheck), "MyRadioButton Color " & Uuid)
                         ElseIf IsMouseDown Then
@@ -244,8 +244,8 @@ Public Class MyRadioButton
                     Case ColorState.Highlight
                         If Checked Then
                             SetResourceReference(BackgroundProperty, "ColorBrush3")
-                            ShapeLogo.Fill = New MyColor(255, 255, 255)
-                            LabText.Foreground = New MyColor(255, 255, 255)
+                            ShapeLogo.SetResourceReference(Shapes.Path.FillProperty, "ColorBrushOnAccent")
+                            LabText.SetResourceReference(TextBlock.ForegroundProperty, "ColorBrushOnAccent")
                         Else
                             Background = ColorSemiTransparent
                             ShapeLogo.SetResourceReference(Shapes.Path.FillProperty, "ColorBrush3")
