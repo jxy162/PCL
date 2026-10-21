@@ -18,7 +18,7 @@
         </Border>
         <Border x:Name="PanProgress" CornerRadius="1000" BorderThickness="0.001" Background="#2FFFFFFF" ClipToBounds="True" Visibility="Collapsed">
             <Border.Clip>
-                <RectangleGeometry x:Name="RectProgress" Rect="0,4,32,28" />
+                <RectangleGeometry x:Name="RectProgress" Rect="0,0,32,32" />
             </Border.Clip>
         </Border>
         <Path x:Name="Path" Stretch="Uniform" Margin="8" Fill="{DynamicResource ColorBrushOnAccent}" RenderTransformOrigin="0.5,0.5">

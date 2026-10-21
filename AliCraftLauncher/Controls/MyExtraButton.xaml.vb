@@ -17,7 +17,7 @@ Public Class MyExtraButton
                 PanProgress.Visibility = Visibility.Collapsed
             Else
                 PanProgress.Visibility = Visibility.Visible
-                RectProgress.Rect = New Rect(0, 28 * (1 - value), 32, 28 * value)
+                RectProgress.Rect = New Rect(0, 32 * (1 - value), 32, 32 * value)
             End If
         End Set
     End Property
