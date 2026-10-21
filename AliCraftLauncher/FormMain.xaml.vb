@@ -638,9 +638,7 @@ Public Class FormMain
             Settings.Set("WindowWidth", Width)
         End If
         UpdateWindowContentSize()
-        Dim FsInset As Double = If(IsFullscreenMode AndAlso Not FsOnHome, FsNavHeight, 0)
-        PanMain.Margin = New Thickness(0, FsInset, 0, 0)
-        PanMain.Height = Math.Max(0, PanForm.Height - PanTitle.ActualHeight - FsInset)
+        UpdateMainContentLayout()
         If Not IsFullscreenMode AndAlso WindowState = WindowState.Maximized Then WindowState = WindowState.Normal '修复 #1938
     End Sub
 
@@ -723,10 +721,23 @@ Public Class FormMain
 
     ''' <summary>全屏时给顶部导航栏留出空间，避免遮挡子页面内容。</summary>
     Private Sub UpdateFullscreenLayout()
+        UpdateMainContentLayout()
+    End Sub
+
+    ''' <summary>
+    ''' 重算 PanMain 的边距与高度。窗口模式下必须扣掉底部导航栏，否则内容区会溢出到 PanBottom 下方，
+    ''' 导致启动页底部的「版本选择 / 版本设置」被底部栏压住。
+    ''' </summary>
+    Private Sub UpdateMainContentLayout()
         Dim Inset As Double = If(IsFullscreenMode AndAlso Not FsOnHome, FsNavHeight, 0)
         PanMain.Margin = New Thickness(0, Inset, 0, 0)
         Dim AvailableHeight As Double = If(IsFullscreenMode, PanForm.Height, PanForm.Height - PanTitle.ActualHeight)
-        PanMain.Height = Math.Max(0, AvailableHeight - Inset)
+        '底部栏在全屏时是 Collapsed，按实际可见性扣除；布局早期 ActualHeight 可能还是 0，回退到声明的 44
+        Dim BottomHeight As Double = 0
+        If PanBottom.Visibility = Visibility.Visible Then
+            BottomHeight = If(PanBottom.ActualHeight > 0, PanBottom.ActualHeight, If(Double.IsNaN(PanBottom.Height), 44, PanBottom.Height))
+        End If
+        PanMain.Height = Math.Max(0, AvailableHeight - Inset - BottomHeight)
     End Sub
 
     Public Sub EnterFullscreenMode()
