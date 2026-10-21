@@ -633,16 +633,25 @@ Public Class FormMain
     ''' </summary>
     Public IsSizeSaveable As Boolean = False
     Private Sub FormMain_SizeChanged() Handles Me.SizeChanged, Me.Loaded
-        If IsSizeSaveable Then
+        If IsSizeSaveable AndAlso Not IsFullscreenMode Then
             Settings.Set("WindowHeight", Height)
             Settings.Set("WindowWidth", Width)
         End If
-        RectForm.Rect = New Rect(0, 0, BorderForm.ActualWidth, BorderForm.ActualHeight)
-        PanForm.Width = BorderForm.ActualWidth + 0.001
-        PanForm.Height = BorderForm.ActualHeight + 0.001
+        UpdateWindowContentSize()
+        Dim FsInset As Double = If(IsFullscreenMode AndAlso Not FsOnHome, FsNavHeight, 0)
+        PanMain.Margin = New Thickness(0, FsInset, 0, 0)
+        PanMain.Height = Math.Max(0, PanForm.Height - PanTitle.ActualHeight - FsInset)
+        If Not IsFullscreenMode AndAlso WindowState = WindowState.Maximized Then WindowState = WindowState.Normal '修复 #1938
+    End Sub
+
+    ''' <summary>按窗口实际尺寸重算内容区大小（全屏切换边距后不会触发 SizeChanged，需主动调用）。</summary>
+    Private Sub UpdateWindowContentSize()
+        Dim ContentWidth As Double = Math.Max(0, Width - PanBack.Margin.Left - PanBack.Margin.Right - BorderForm.Margin.Left - BorderForm.Margin.Right)
+        Dim ContentHeight As Double = Math.Max(0, Height - PanBack.Margin.Top - PanBack.Margin.Bottom - BorderForm.Margin.Top - BorderForm.Margin.Bottom)
+        RectForm.Rect = New Rect(0, 0, ContentWidth, ContentHeight)
+        PanForm.Width = ContentWidth + 0.001
+        PanForm.Height = ContentHeight + 0.001
         PanMain.Width = PanForm.Width
-        PanMain.Height = Math.Max(0, PanForm.Height - PanTitle.ActualHeight)
-        If WindowState = WindowState.Maximized Then WindowState = WindowState.Normal '修复 #1938
     End Sub
 
     '最小化
@@ -664,6 +673,8 @@ Public Class FormMain
     Private FsLastLeft As Double, FsLastTop As Double, FsLastWidth As Double, FsLastHeight As Double
     Private FsLastResize As ResizeMode = ResizeMode.CanResize
     Private FsOnHome As Boolean = True
+    Private FsSyncingNav As Boolean = False
+    Private Const FsNavHeight As Double = 76
 
     Private Sub BtnTitleMax_Click() Handles BtnTitleMax.Click
         ToggleFullscreen()
@@ -671,25 +682,20 @@ Public Class FormMain
     Private Sub BtnFsExit_Click() Handles BtnFsExit.Click
         ExitFullscreenMode()
     End Sub
-    Private Sub WindMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.PreviewKeyDown
-        If e.Key = Key.F11 Then
-            e.Handled = True
-            ToggleFullscreen()
-        ElseIf IsFullscreenMode AndAlso e.Key = Key.Escape Then
-            e.Handled = True
-            If FsOnHome Then ExitFullscreenMode() Else ShowFsHome()
-        End If
-    End Sub
     Private Sub FsNavHome_Check() Handles NavFsHome.Check
+        If FsSyncingNav Then Return
         If NavFsHome.Checked Then ShowFsHome()
     End Sub
     Private Sub FsNavInstance_Check() Handles NavFsInstance.Check
+        If FsSyncingNav Then Return
         If NavFsInstance.Checked Then ShowFsPage(PageType.InstanceSelect)
     End Sub
     Private Sub FsNavDownload_Check() Handles NavFsDownload.Check
+        If FsSyncingNav Then Return
         If NavFsDownload.Checked Then ShowFsPage(PageType.Download)
     End Sub
     Private Sub FsNavSetup_Check() Handles NavFsSetup.Check
+        If FsSyncingNav Then Return
         If NavFsSetup.Checked Then ShowFsPage(PageType.Setup)
     End Sub
 
@@ -697,19 +703,50 @@ Public Class FormMain
         If IsFullscreenMode Then ExitFullscreenMode() Else EnterFullscreenMode()
     End Sub
 
+    ''' <summary>获取窗口当前所在显示器的完整边界（WPF 单位）。</summary>
+    Private Function GetCurrentScreenBounds() As Rect
+        Try
+            Dim Bounds As System.Drawing.Rectangle = System.Windows.Forms.Screen.FromHandle(Handle).Bounds
+            Dim Source As PresentationSource = PresentationSource.FromVisual(Me)
+            If Source IsNot Nothing AndAlso Source.CompositionTarget IsNot Nothing Then
+                Dim Transform As Matrix = Source.CompositionTarget.TransformFromDevice
+                Dim TopLeft As Point = Transform.Transform(New Point(Bounds.Left, Bounds.Top))
+                Dim BottomRight As Point = Transform.Transform(New Point(Bounds.Right, Bounds.Bottom))
+                Return New Rect(TopLeft, BottomRight)
+            End If
+            Return New Rect(GetWPFSize(Bounds.Left), GetWPFSize(Bounds.Top), GetWPFSize(Bounds.Width), GetWPFSize(Bounds.Height))
+        Catch ex As Exception
+            Logger.Warn(ex, "获取显示器边界失败")
+            Return New Rect(0, 0, SystemParameters.PrimaryScreenWidth, SystemParameters.PrimaryScreenHeight)
+        End Try
+    End Function
+
+    ''' <summary>全屏时给顶部导航栏留出空间，避免遮挡子页面内容。</summary>
+    Private Sub UpdateFullscreenLayout()
+        Dim Inset As Double = If(IsFullscreenMode AndAlso Not FsOnHome, FsNavHeight, 0)
+        PanMain.Margin = New Thickness(0, Inset, 0, 0)
+        Dim AvailableHeight As Double = If(IsFullscreenMode, PanForm.Height, PanForm.Height - PanTitle.ActualHeight)
+        PanMain.Height = Math.Max(0, AvailableHeight - Inset)
+    End Sub
+
     Public Sub EnterFullscreenMode()
         Try
             If IsFullscreenMode Then Return
-            IsFullscreenMode = True
             FsLastState = WindowState
             FsLastLeft = Left : FsLastTop = Top : FsLastWidth = Width : FsLastHeight = Height
             FsLastResize = ResizeMode
+            IsFullscreenMode = True '先置位，避免尺寸变化时误存设置或触发 #1938 的复原
             WindowState = WindowState.Normal
             ResizeMode = ResizeMode.NoResize
-            WindowState = WindowState.Maximized
+            Dim Bounds As Rect = GetCurrentScreenBounds()
+            Left = Bounds.Left : Top = Bounds.Top : Width = Bounds.Width : Height = Bounds.Height
             PanBack.Margin = New Thickness(0)
             BorderForm.Margin = New Thickness(0)
             RectForm.RadiusX = 0 : RectForm.RadiusY = 0
+            RectForm.Rect = New Rect(0, 0, Bounds.Width, Bounds.Height)
+            PanForm.Width = Bounds.Width + 0.001
+            PanForm.Height = Bounds.Height + 0.001
+            PanMain.Width = PanForm.Width
             PanTitle.Visibility = Visibility.Collapsed
             PanBottom.Visibility = Visibility.Collapsed
             For Each R In {ResizerT, ResizerB, ResizerR, ResizerL, ResizerLT, ResizerLB, ResizerRB, ResizerRT}
@@ -718,9 +755,10 @@ Public Class FormMain
             PanFullscreen.Visibility = Visibility.Visible
             PanFullscreen.Opacity = 0
             AniStart(AaOpacity(PanFullscreen, 1, 220), "Fullscreen")
-            Topmost = True
             ShowFsHome()
-            Logger.Info("已进入全屏模式")
+            Topmost = True '窗口无边框透明时，全屏会被任务栏压住
+            Activate()
+            Logger.Info($"已进入全屏模式：{Bounds.Width} x {Bounds.Height} @ ({Bounds.Left}, {Bounds.Top})")
         Catch ex As Exception
             Logger.Warn(ex, "进入全屏模式失败")
         End Try
@@ -730,30 +768,49 @@ Public Class FormMain
         Try
             If Not IsFullscreenMode Then Return
             IsFullscreenMode = False
-            Topmost = False
-            AniStart({
-                AaOpacity(PanFullscreen, -PanFullscreen.Opacity, 160),
-                AaCode(Sub()
-                           PanFullscreen.Visibility = Visibility.Collapsed
-                           PanFullscreen.Opacity = 1
-                       End Sub, 180)
-            }, "Fullscreen")
+            PanFullscreen.Visibility = Visibility.Collapsed
+            PanFullscreen.Opacity = 1
             PanTitle.Visibility = Visibility.Visible
             PanBottom.Visibility = Visibility.Visible
-            PanLeft.Visibility = Visibility.Visible
-            PanMain.Visibility = Visibility.Visible
-            PanBack.Margin = New Thickness(10)
-            BorderForm.Margin = New Thickness(8)
-            RectForm.RadiusX = 12 : RectForm.RadiusY = 12
             For Each R In {ResizerT, ResizerB, ResizerR, ResizerL, ResizerLT, ResizerLB, ResizerRB, ResizerRT}
                 R.Visibility = Visibility.Visible
             Next
+            WindowState = WindowState.Normal
             Left = FsLastLeft : Top = FsLastTop : Width = FsLastWidth : Height = FsLastHeight
+            PanBack.Margin = New Thickness(10)
+            BorderForm.Margin = New Thickness(8)
+            RectForm.RadiusX = 12 : RectForm.RadiusY = 12
+            UpdateWindowContentSize()
             ResizeMode = FsLastResize
             WindowState = FsLastState
+            Topmost = False
+            FsOnHome = True
+            PanMain.Margin = New Thickness(0)
+            PanFsHome.Visibility = Visibility.Collapsed
+            PanFsHome.Opacity = 0
+            PanFsBack.Visibility = Visibility.Collapsed
             Logger.Info("已退出全屏模式")
         Catch ex As Exception
             Logger.Warn(ex, "退出全屏模式失败")
+        End Try
+    End Sub
+
+    ''' <summary>同步全屏顶部导航的选中状态，不触发页面切换。</summary>
+    Private Sub SyncFsNav(Target As PageType)
+        Try
+            FsSyncingNav = True
+            Select Case Target
+                Case PageType.Download
+                    If Not NavFsDownload.Checked Then NavFsDownload.SetChecked(True, False, False)
+                Case PageType.InstanceSelect
+                    If Not NavFsInstance.Checked Then NavFsInstance.SetChecked(True, False, False)
+                Case PageType.Setup
+                    If Not NavFsSetup.Checked Then NavFsSetup.SetChecked(True, False, False)
+                Case Else
+                    If Not NavFsHome.Checked Then NavFsHome.SetChecked(True, False, False)
+            End Select
+        Finally
+            FsSyncingNav = False
         End Try
     End Sub
 
@@ -761,14 +818,16 @@ Public Class FormMain
     Public Sub ShowFsHome()
         Try
             FsOnHome = True
-            If Not NavFsHome.Checked Then NavFsHome.SetChecked(True, True, False)
+            SyncFsNav(PageType.Launch)
             PanFsBack.Visibility = Visibility.Visible
             PanFsHome.Visibility = Visibility.Visible
+            PanFsHome.Opacity = 0
             PanFsHome.RenderTransform = New TranslateTransform(0, 26)
             AniStart({
-                AaOpacity(PanFsHome, 1 - PanFsHome.Opacity, 260),
+                AaOpacity(PanFsHome, 1, 260),
                 AaTranslateY(PanFsHome, 0, 340,, New AniEaseOutFluent)
             }, "FsPage")
+            UpdateFullscreenLayout()
             UpdateFullscreenContent()
         Catch ex As Exception
             Logger.Warn(ex, "显示全屏主页失败")
@@ -779,10 +838,16 @@ Public Class FormMain
     Public Sub ShowFsPage(Target As PageType)
         Try
             FsOnHome = False
+            SyncFsNav(Target)
             PageChange(Target)
+            UpdateFullscreenLayout()
             AniStart({
                 AaOpacity(PanFsHome, -PanFsHome.Opacity, 140),
-                AaCode(Sub() PanFsBack.Visibility = Visibility.Collapsed, 150)
+                AaCode(Sub()
+                           PanFsHome.Visibility = Visibility.Collapsed
+                           PanFsHome.Opacity = 0
+                           PanFsBack.Visibility = Visibility.Collapsed
+                       End Sub, 150)
             }, "FsPage")
         Catch ex As Exception
             Logger.Warn(ex, "全屏切换页面失败")
@@ -844,6 +909,29 @@ Public Class FormMain
         End Try
     End Sub
 
+    ''' <summary>同步全屏主页的启动进度显示。</summary>
+    Public Sub UpdateFullscreenLaunching(Stage As String, Progress As Double, IsFinished As Boolean)
+        Try
+            If Not IsFullscreenMode Then Return
+            PanFsLaunching.Visibility = Visibility.Visible
+            LabFsLaunchStage.Text = If(IsFinished, "已启动游戏", If(String.IsNullOrWhiteSpace(Stage), "正在启动游戏", Stage))
+            LabFsLaunchProgress.Text = (Math.Max(0, Math.Min(1, Progress)) * 100).ToString("0.00") & " %"
+            RectFsLaunchProgress.Width = 360 * Math.Max(0, Math.Min(1, Progress))
+        Catch ex As Exception
+            Logger.Warn(ex, "刷新全屏启动进度失败")
+        End Try
+    End Sub
+
+    ''' <summary>结束全屏主页的启动进度显示。</summary>
+    Public Sub HideFullscreenLaunching()
+        Try
+            PanFsLaunching.Visibility = Visibility.Collapsed
+            RectFsLaunchProgress.Width = 0
+        Catch ex As Exception
+            Logger.Warn(ex, "隐藏全屏启动进度失败")
+        End Try
+    End Sub
+
     ''' <summary>
     ''' 刷新标题栏的当前账号显示。
     ''' </summary>
@@ -852,6 +940,7 @@ Public Class FormMain
             If LabTitleAccount Is Nothing Then Return
             Dim Name As String = McLoginName()
             LabTitleAccount.Text = If(String.IsNullOrWhiteSpace(Name), "未登录", Name)
+            If IsFullscreenMode Then UpdateFullscreenContent()
         Catch ex As Exception
             Logger.Warn(ex, "刷新标题栏账号失败")
         End Try
@@ -1032,6 +1121,26 @@ Public Class FormMain
         ' 在没有弹窗时：继续检查……
         '==========================
 
+        '全屏模式：F11 切换，Esc 逐级返回
+        If e.Key = Key.F11 Then
+            e.Handled = True
+            If IsFullscreenMode Then
+                ExitFullscreenMode()
+            ElseIf PageCurrent = FormMain.PageType.InstanceSelect Then
+                '版本选择页保留原有的隐藏版本开关
+                FrmSelectRight.ShowHidden = Not FrmSelectRight.ShowHidden
+                LoaderFolderRun(McInstanceListLoader, McFolderSelected, LoaderFolderRunType.ForceRun, MaxDepth:=1, ExtraPath:="versions\")
+            Else
+                EnterFullscreenMode()
+            End If
+            Return
+        End If
+        If IsFullscreenMode AndAlso e.Key = Key.Escape Then
+            e.Handled = True
+            If FsOnHome Then ExitFullscreenMode() Else ShowFsHome()
+            Return
+        End If
+
         '按 ESC 取消启动，或返回上一级
         If e.Key = Key.Escape Then
             If PageCurrent = FormMain.PageType.Launch AndAlso McLaunchLoader.State = LoadState.Loading Then
@@ -1040,12 +1149,7 @@ Public Class FormMain
             End If
             TriggerPageBack()
         End If
-        '更改隐藏版本可见性
-        If e.Key = Key.F11 AndAlso PageCurrent = FormMain.PageType.InstanceSelect Then
-            FrmSelectRight.ShowHidden = Not FrmSelectRight.ShowHidden
-            LoaderFolderRun(McInstanceListLoader, McFolderSelected, LoaderFolderRunType.ForceRun, MaxDepth:=1, ExtraPath:="versions\")
-            Return
-        End If
+
         '更改功能隐藏可见性
         If e.Key = Key.F12 Then
             PageSetupUI.HiddenForceShow = Not PageSetupUI.HiddenForceShow
@@ -1623,6 +1727,7 @@ Public Class FormMain
         ' 自用版：标题栏账号 + 子页面自动模糊壁纸
         Try
             UpdateTitleAccount()
+            If IsFullscreenMode Then UpdateFullscreenContent()
             Dim NewExtra As Double = If({PageType.Setup, PageType.Download, PageType.Other, PageType.TaskManager, PageType.InstanceSelect, PageType.InstanceSetup}.Contains(Stack.Page), 18, 0)
             If NewExtra <> PageBlurExtra Then
                 PageBlurExtra = NewExtra

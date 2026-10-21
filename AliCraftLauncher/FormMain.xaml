@@ -105,7 +105,7 @@
                         </LinearGradientBrush>
                     </Grid.Background>
                     <local:MyImage x:Name="ImgTitle" IsHitTestVisible="False" Stretch="UniformToFill" IsEnabled="False" RenderOptions.BitmapScalingMode="LowQuality" />
-                    <local:MyIconButton x:Name="BtnTitleMax" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,76,0" Theme="White"
+                    <local:MyIconButton x:Name="BtnTitleMax" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,76,0" Theme="White" ToolTip="全屏 (F11)"
                                        LogoScale="0.6" Logo="F1 M0,0 H14 V14 H0 Z M3,3 V11 H11 V3 Z" />
                     <local:MyIconButton x:Name="BtnTitleClose" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,12,0" Theme="White" 
                                        LogoScale="0.72" Logo="F1 M2,0 L0,2 8,10 0,18 2,20 10,12 18,20 20,18 12,10 20,2 18,0 10,8 2,0Z" />
@@ -158,7 +158,7 @@
                         </Border>
                     </Border>
                 </Grid>
-                <StackPanel x:Name="PanHint" IsHitTestVisible="False" UseLayoutRounding="True" SnapsToDevicePixels="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,20" Grid.RowSpan="2" />
+                <StackPanel x:Name="PanHint" IsHitTestVisible="False" UseLayoutRounding="True" SnapsToDevicePixels="True" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0,0,0,20" Grid.RowSpan="2" Panel.ZIndex="60" />
                 <Grid x:Name="PanBottom" Grid.Row="2" Height="44" Background="{DynamicResource ColorBrushBarGlass}">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -213,6 +213,13 @@
                         <StackPanel VerticalAlignment="Bottom" Margin="64,0,64,58">
                             <TextBlock x:Name="LabFsVersion" Text="未选择版本" FontSize="58" FontWeight="Bold" Foreground="White" TextTrimming="CharacterEllipsis" IsHitTestVisible="False" />
                             <TextBlock x:Name="LabFsAccount" Text="未登录" FontSize="17" Foreground="#A9B4C0" Margin="0,2,0,0" IsHitTestVisible="False" />
+                            <StackPanel x:Name="PanFsLaunching" Orientation="Horizontal" Margin="0,16,0,0" Visibility="Collapsed" IsHitTestVisible="False">
+                                <TextBlock x:Name="LabFsLaunchStage" Text="正在启动游戏" FontSize="14" Foreground="#DFFFFFFF" VerticalAlignment="Center" Margin="0,0,14,0" />
+                                <Border Width="360" Height="6" CornerRadius="3" Background="#33FFFFFF" VerticalAlignment="Center">
+                                    <Rectangle x:Name="RectFsLaunchProgress" HorizontalAlignment="Left" Width="0" Fill="#9BE8A0" RadiusX="3" RadiusY="3" />
+                                </Border>
+                                <TextBlock x:Name="LabFsLaunchProgress" Text="0.00 %" FontSize="14" Foreground="#9BE8A0" VerticalAlignment="Center" Margin="14,0,0,0" />
+                            </StackPanel>
                             <StackPanel Orientation="Horizontal" Margin="0,34,0,0">
                                 <Border x:Name="TileFsLaunch" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
                                     <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
@@ -262,7 +269,7 @@
                         </StackPanel>
                     </Grid>
                 </Grid>
-                <Grid x:Name="PanMsg" Grid.RowSpan="3" Background="#00000000" Visibility="Collapsed" />
+                <Grid x:Name="PanMsg" Grid.RowSpan="3" Background="#00000000" Visibility="Collapsed" Panel.ZIndex="100" />
             </Grid>
         </Border>
     </Grid>
