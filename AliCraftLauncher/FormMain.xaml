@@ -105,9 +105,11 @@
                         </LinearGradientBrush>
                     </Grid.Background>
                     <local:MyImage x:Name="ImgTitle" IsHitTestVisible="False" Stretch="UniformToFill" IsEnabled="False" RenderOptions.BitmapScalingMode="LowQuality" />
+                    <local:MyIconButton x:Name="BtnTitleMax" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,76,0" Theme="White"
+                                       LogoScale="0.6" Logo="F1 M0,0 H14 V14 H0 Z M3,3 V11 H11 V3 Z" />
                     <local:MyIconButton x:Name="BtnTitleClose" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,12,0" Theme="White" 
                                        LogoScale="0.72" Logo="F1 M2,0 L0,2 8,10 0,18 2,20 10,12 18,20 20,18 12,10 20,2 18,0 10,8 2,0Z" />
-                    <TextBlock x:Name="LabTitleAccount" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,88,0" Foreground="White" Opacity="0.92" FontSize="12.5" IsHitTestVisible="False" />
+                    <TextBlock x:Name="LabTitleAccount" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,120,0" Foreground="White" Opacity="0.92" FontSize="12.5" IsHitTestVisible="False" />
                     <local:MyIconButton x:Name="BtnTitleMin" HorizontalAlignment="Right" Height="28" VerticalAlignment="Center" Width="28" Margin="0,0,44,0" Theme="White" 
                                        LogoScale="0.72" Logo="F1 M0,0 h15 v2 h-15 v-2 Z" />
                     <Grid x:Name="PanTitleMain" HorizontalAlignment="Left" Width="{Binding ActualWidth, ElementName=PanTitle, Mode=OneWay}">
@@ -187,6 +189,46 @@
                                        Logo="M802.152 143.682c31.236 22.212 59.004 47.379 83.297 75.486 24.297 28.116 45.12 58.481 62.472 91.105 17.356 32.624 30.543 67.159 39.569 103.6 9.023 36.442 13.533 73.403 13.533 110.887 0 64.556-12.32 125.116-36.96 181.69-24.643 56.57-57.963 105.854-99.956 147.847-41.994 41.998-91.278 75.313-147.851 99.955-56.57 24.642-117.134 36.966-181.684 36.966-63.86 0-124.08-12.324-180.649-36.966-56.575-24.642-106.032-57.957-148.37-99.955-42.344-41.993-75.662-91.277-99.956-147.846C81.3 649.876 69.155 589.315 69.155 524.76c0-36.788 4.337-72.884 13.016-108.283 8.678-35.4 20.996-69.065 36.96-100.999 15.969-31.926 35.75-61.774 59.35-89.537 23.6-27.768 49.976-52.757 79.133-74.969 15.272-11.107 31.755-15.271 49.456-12.497 17.697 2.782 32.1 11.455 43.21 26.03 11.108 14.583 15.27 30.891 12.496 48.94-2.781 18.047-11.454 32.622-26.03 43.732-43.732 31.927-77.225 71.145-100.48 117.653-23.247 46.507-34.873 96.483-34.873 149.93 0 45.812 8.673 89.027 26.03 129.632 17.352 40.605 41.124 76.003 71.317 106.198 30.2 30.2 65.599 54.145 106.204 71.846 40.607 17.697 83.814 26.549 129.631 26.549 45.811 0 89.02-8.852 129.626-26.549 40.606-17.701 76.01-41.647 106.203-71.846 30.195-30.195 54.14-65.593 71.841-106.198 17.702-40.607 26.549-83.82 26.549-129.631 0-54.14-12.49-105.334-37.478-153.577-24.994-48.24-60.048-87.977-105.162-119.213-15.272-10.412-24.468-24.643-27.592-42.69-3.125-18.049 0.518-34.709 10.93-49.983 10.412-14.575 24.643-23.427 42.69-26.547 18.047-3.12 34.698 0.519 49.97 10.93zM534.57 527.888c-18.05 0-33.495-6.421-46.337-19.264-12.841-12.841-19.263-28.287-19.263-46.335V66.635c0-18.048 6.42-33.666 19.263-46.854C501.076 6.593 516.521 0 534.571 0c18.738 0 34.53 6.593 47.371 19.781 12.842 13.188 19.263 28.806 19.263 46.854v395.654c0 18.047-6.42 33.493-19.263 46.335-12.842 12.843-28.633 19.264-47.371 19.264z" />
                     <local:MyExtraButton x:Name="BtnExtraMusic" HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed" CanRightClick="True" />
                 </StackPanel>
+                </Grid>
+                <Grid x:Name="PanFullscreen" Grid.RowSpan="3" Visibility="Collapsed" Panel.ZIndex="50">
+                    <Grid.Background>
+                        <SolidColorBrush Color="#F20A0E13" />
+                    </Grid.Background>
+                    <Grid x:Name="PanFsContent" Opacity="0">
+                        <TextBlock Text="ALICRAFTLAUNCHER" FontSize="14" Foreground="#9BE8A0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="56,52,0,0" IsHitTestVisible="False" />
+                        <local:MyIconButton x:Name="BtnFsExit" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,46,46,0" Width="38" Height="38" Theme="White" LogoScale="0.6"
+                                            Logo="F1 M2,0 L0,2 8,10 0,18 2,20 10,12 18,20 20,18 12,10 20,2 18,0 10,8 2,0Z" />
+                        <StackPanel VerticalAlignment="Bottom" Margin="56,0,56,54">
+                            <TextBlock x:Name="LabFsVersion" Text="未选择版本" FontSize="58" FontWeight="Bold" Foreground="White" TextTrimming="CharacterEllipsis" IsHitTestVisible="False" />
+                            <TextBlock x:Name="LabFsAccount" Text="未登录" FontSize="18" Foreground="#A9B4C0" Margin="0,4,0,0" IsHitTestVisible="False" />
+                            <StackPanel Orientation="Horizontal" Margin="0,38,0,0">
+                                <Border x:Name="TileFsLaunch" Width="162" Height="120" CornerRadius="18" Margin="0,0,18,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="F1 M4,2 L28,16 L4,30 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="开始游戏" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="TileFsDownload" Width="162" Height="120" CornerRadius="18" Margin="0,0,18,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="F1 M13,2 H19 V18 H28 L16,31 L4,18 H13 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="下载游戏" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="TileFsInstance" Width="162" Height="120" CornerRadius="18" Margin="0,0,18,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="F1 M4,5 H28 V10 H4 Z M4,14 H28 V19 H4 Z M4,23 H28 V28 H4 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="版本管理" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                    </StackPanel>
+                                </Border>
+                                <Border x:Name="TileFsSetup" Width="162" Height="120" CornerRadius="18" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <Path Data="F1 M16,9 A7,7 0 1 1 15.9,9 Z M14,1 H18 V6 H14 Z M14,26 H18 V31 H14 Z M1,14 H6 V18 H1 Z M26,14 H31 V18 H26 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="设置" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
                 <Grid x:Name="PanMsg" Grid.RowSpan="3" Background="#00000000" Visibility="Collapsed" />
             </Grid>

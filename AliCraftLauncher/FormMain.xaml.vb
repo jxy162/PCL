@@ -658,6 +658,115 @@ Public Class FormMain
     ' 自用版：子页面额外模糊
     Public PageBlurExtra As Double = 0
 
+    ' ── 自用版：全屏模式（Xbox 风格）──
+    Public IsFullscreenMode As Boolean = False
+    Private FsLastState As WindowState = WindowState.Normal
+    Private FsLastLeft As Double, FsLastTop As Double, FsLastWidth As Double, FsLastHeight As Double
+
+    Private Sub BtnTitleMax_Click() Handles BtnTitleMax.Click
+        ToggleFullscreen()
+    End Sub
+    Private Sub BtnFsExit_Click() Handles BtnFsExit.Click
+        ExitFullscreenMode()
+    End Sub
+    Private Sub WindMain_KeyDown(sender As Object, e As KeyEventArgs ) Handles Me.PreviewKeyDown
+        If e.Key = Key.F11 Then
+            e.Handled = True
+            ToggleFullscreen()
+        ElseIf IsFullscreenMode AndAlso e.Key = Key.Escape Then
+            e.Handled = True
+            ExitFullscreenMode()
+        End If
+    End Sub
+
+    Public Sub ToggleFullscreen()
+        If IsFullscreenMode Then ExitFullscreenMode() Else EnterFullscreenMode()
+    End Sub
+
+    Public Sub EnterFullscreenMode()
+        Try
+            If IsFullscreenMode Then Return
+            IsFullscreenMode = True
+            FsLastState = WindowState
+            FsLastLeft = Left : FsLastTop = Top : FsLastWidth = Width : FsLastHeight = Height
+            WindowState = WindowState.Normal
+            Dim Wa = SystemParameters.WorkArea
+            Left = Wa.Left : Top = Wa.Top : Width = Wa.Width : Height = Wa.Height
+            PanBack.Margin = New Thickness(0)
+            BorderForm.Margin = New Thickness(0)
+            RectForm.RadiusX = 0 : RectForm.RadiusY = 0
+            PanTitle.Visibility = Visibility.Collapsed
+            PanBottom.Visibility = Visibility.Collapsed
+            PanLeft.Visibility = Visibility.Collapsed
+            PanMain.Visibility = Visibility.Collapsed
+            PanHint.Visibility = Visibility.Collapsed
+            For Each R In {ResizerT, ResizerB, ResizerR, ResizerL, ResizerLT, ResizerLB, ResizerRB, ResizerRT}
+                R.Visibility = Visibility.Collapsed
+            Next
+            UpdateFullscreenContent()
+            PanFullscreen.Visibility = Visibility.Visible
+            PanFsContent.Opacity = 0
+            AniStart(AaOpacity(PanFullscreen, 1 - PanFullscreen.Opacity, 180), "Fullscreen")
+            AniStart(AaOpacity(PanFsContent, 1, 300, 80, New AniEaseOutFluent), "Fullscreen")
+            Logger.Info("已进入全屏模式")
+        Catch ex As Exception
+            Logger.Warn(ex, "进入全屏模式失败")
+        End Try
+    End Sub
+
+    Public Sub ExitFullscreenMode()
+        Try
+            If Not IsFullscreenMode Then Return
+            IsFullscreenMode = False
+            AniStart({
+                AaOpacity(PanFullscreen, -PanFullscreen.Opacity, 150),
+                AaCode(Sub()
+                           PanFullscreen.Visibility = Visibility.Collapsed
+                           PanFullscreen.Opacity = 1
+                       End Sub, 170)
+            }, "Fullscreen")
+            PanTitle.Visibility = Visibility.Visible
+            PanBottom.Visibility = Visibility.Visible
+            PanLeft.Visibility = Visibility.Visible
+            PanMain.Visibility = Visibility.Visible
+            PanBack.Margin = New Thickness(10)
+            BorderForm.Margin = New Thickness(8)
+            RectForm.RadiusX = 12 : RectForm.RadiusY = 12
+            For Each R In {ResizerT, ResizerB, ResizerR, ResizerL, ResizerLT, ResizerLB, ResizerRB, ResizerRT}
+                R.Visibility = Visibility.Visible
+            Next
+            Left = FsLastLeft : Top = FsLastTop : Width = FsLastWidth : Height = FsLastHeight
+            WindowState = FsLastState
+            Logger.Info("已退出全屏模式")
+        Catch ex As Exception
+            Logger.Warn(ex, "退出全屏模式失败")
+        End Try
+    End Sub
+
+    Public Sub UpdateFullscreenContent()
+        Try
+            LabFsVersion.Text = If(McInstanceSelected IsNot Nothing AndAlso McInstanceSelected.IsLoaded, McInstanceSelected.Name, "未选择版本")
+            Dim AccountName As String = McLoginName()
+            LabFsAccount.Text = If(String.IsNullOrWhiteSpace(AccountName), "未登录", AccountName)
+        Catch ex As Exception
+            Logger.Warn(ex, "刷新全屏页内容失败")
+        End Try
+    End Sub
+
+    Private Sub TileFsLaunch_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsLaunch.MouseLeftButtonUp
+        ExitFullscreenMode()
+        PageChange(PageType.Launch)
+        FrmLaunchLeft.LaunchButtonClick()
+    End Sub
+    Private Sub TileFsDownload_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsDownload.MouseLeftButtonUp
+        ExitFullscreenMode() : PageChange(PageType.Download)
+    End Sub
+    Private Sub TileFsInstance_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsInstance.MouseLeftButtonUp
+        ExitFullscreenMode() : PageChange(PageType.InstanceSelect)
+    End Sub
+    Private Sub TileFsSetup_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsSetup.MouseLeftButtonUp
+        ExitFullscreenMode() : PageChange(PageType.Setup)
+    End Sub
     ''' <summary>
     ''' 刷新标题栏的当前账号显示。
     ''' </summary>
@@ -821,7 +930,7 @@ Public Class FormMain
 #Region "窗体事件"
 
     '按键事件
-    Private Sub FormMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
+    Private Sub FormMain_KeyDown(sender As Object, e As KeyEventArgs ) Handles Me.PreviewKeyDown
         If e.IsRepeat Then Return
         '修复按下 Alt 后误认为弹出系统菜单导致的冻结
         If e.SystemKey = Key.LeftAlt OrElse e.SystemKey = Key.RightAlt Then e.Handled = True
