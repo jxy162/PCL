@@ -191,42 +191,74 @@
                 </StackPanel>
                 </Grid>
                 <Grid x:Name="PanFullscreen" Grid.RowSpan="3" Visibility="Collapsed" Panel.ZIndex="50">
-                    <Grid.Background>
-                        <SolidColorBrush Color="#F20A0E13" />
-                    </Grid.Background>
-                    <Grid x:Name="PanFsContent" Opacity="0">
-                        <TextBlock Text="ALICRAFTLAUNCHER" FontSize="14" Foreground="#9BE8A0" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="56,52,0,0" IsHitTestVisible="False" />
-                        <local:MyIconButton x:Name="BtnFsExit" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,46,46,0" Width="38" Height="38" Theme="White" LogoScale="0.6"
-                                            Logo="F1 M2,0 L0,2 8,10 0,18 2,20 10,12 18,20 20,18 12,10 20,2 18,0 10,8 2,0Z" />
-                        <StackPanel VerticalAlignment="Bottom" Margin="56,0,56,54">
+                    <Grid x:Name="PanFsBack" Background="#FF080B10">
+                        <Ellipse HorizontalAlignment="Right" VerticalAlignment="Top" Width="1200" Height="1200" Margin="0,-560,-360,0" IsHitTestVisible="False">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="#3A17C3E6" Offset="0" />
+                                    <GradientStop Color="#0017C3E6" Offset="1" />
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                        <Ellipse HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="1000" Height="1000" Margin="-360,0,0,-520" IsHitTestVisible="False">
+                            <Ellipse.Fill>
+                                <RadialGradientBrush>
+                                    <GradientStop Color="#2E4FE08A" Offset="0" />
+                                    <GradientStop Color="#004FE08A" Offset="1" />
+                                </RadialGradientBrush>
+                            </Ellipse.Fill>
+                        </Ellipse>
+                    </Grid>
+                    <Grid x:Name="PanFsHome" Opacity="0">
+                        <StackPanel VerticalAlignment="Bottom" Margin="64,0,64,58">
                             <TextBlock x:Name="LabFsVersion" Text="未选择版本" FontSize="58" FontWeight="Bold" Foreground="White" TextTrimming="CharacterEllipsis" IsHitTestVisible="False" />
-                            <TextBlock x:Name="LabFsAccount" Text="未登录" FontSize="18" Foreground="#A9B4C0" Margin="0,4,0,0" IsHitTestVisible="False" />
-                            <StackPanel Orientation="Horizontal" Margin="0,38,0,0">
-                                <Border x:Name="TileFsLaunch" Width="162" Height="120" CornerRadius="18" Margin="0,0,18,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                            <TextBlock x:Name="LabFsAccount" Text="未登录" FontSize="17" Foreground="#A9B4C0" Margin="0,2,0,0" IsHitTestVisible="False" />
+                            <StackPanel Orientation="Horizontal" Margin="0,34,0,0">
+                                <Border x:Name="TileFsLaunch" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <Path Data="F1 M4,2 L28,16 L4,30 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
-                                        <TextBlock Text="开始游戏" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                        <Path Data="F1 M4,2 L28,16 L4,30 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="开始游戏" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
                                     </StackPanel>
                                 </Border>
-                                <Border x:Name="TileFsDownload" Width="162" Height="120" CornerRadius="18" Margin="0,0,18,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                                <Border x:Name="TileFsDownload" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <Path Data="F1 M13,2 H19 V18 H28 L16,31 L4,18 H13 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
-                                        <TextBlock Text="下载游戏" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                        <Path Data="F1 M13,2 H19 V18 H28 L16,31 L4,18 H13 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="下载游戏" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
                                     </StackPanel>
                                 </Border>
-                                <Border x:Name="TileFsInstance" Width="162" Height="120" CornerRadius="18" Margin="0,0,18,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                                <Border x:Name="TileFsInstance" Width="166" Height="124" CornerRadius="16" Margin="0,0,16,0" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <Path Data="F1 M4,5 H28 V10 H4 Z M4,14 H28 V19 H4 Z M4,23 H28 V28 H4 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
-                                        <TextBlock Text="版本管理" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                        <Path Data="F1 M4,5 H28 V10 H4 Z M4,14 H28 V19 H4 Z M4,23 H28 V28 H4 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="版本管理" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
                                     </StackPanel>
                                 </Border>
-                                <Border x:Name="TileFsSetup" Width="162" Height="120" CornerRadius="18" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand">
+                                <Border x:Name="TileFsSetup" Width="166" Height="124" CornerRadius="16" Background="#26FFFFFF" BorderBrush="#3CFFFFFF" BorderThickness="1" Cursor="Hand" RenderTransformOrigin="0.5,0.5">
+                                    <Border.RenderTransform><ScaleTransform ScaleX="1" ScaleY="1" /></Border.RenderTransform>
                                     <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                        <Path Data="F1 M16,9 A7,7 0 1 1 15.9,9 Z M14,1 H18 V6 H14 Z M14,26 H18 V31 H14 Z M1,14 H6 V18 H1 Z M26,14 H31 V18 H26 Z" Fill="#9BE8A0" Width="30" Height="30" Stretch="Uniform" HorizontalAlignment="Center" />
-                                        <TextBlock Text="设置" FontSize="19" Foreground="White" HorizontalAlignment="Center" Margin="0,14,0,0" IsHitTestVisible="False" />
+                                        <Path Data="F1 M16,9 A7,7 0 1 1 15.9,9 Z M14,1 H18 V6 H14 Z M14,26 H18 V31 H14 Z M1,14 H6 V18 H1 Z M26,14 H31 V18 H26 Z" Fill="#9BE8A0" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" />
+                                        <TextBlock Text="设置" FontSize="18" Foreground="White" HorizontalAlignment="Center" Margin="0,12,0,0" IsHitTestVisible="False" />
                                     </StackPanel>
                                 </Border>
                             </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                    <Grid x:Name="PanFsNav" VerticalAlignment="Top" Height="76">
+                        <Grid.Background>
+                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                <GradientStop Color="#8C000000" Offset="0" />
+                                <GradientStop Color="#00000000" Offset="1" />
+                            </LinearGradientBrush>
+                        </Grid.Background>
+                        <TextBlock Text="ALICRAFTLAUNCHER" FontSize="13" Foreground="#7FE3A0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="64,0,0,0" IsHitTestVisible="False" />
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,56,0">
+                            <local:MyRadioButton x:Name="NavFsHome" ColorType="Highlight" Text="主页" Checked="True" Margin="4,0" Padding="2,0" />
+                            <local:MyRadioButton x:Name="NavFsInstance" ColorType="Highlight" Text="版本" Margin="4,0" Padding="2,0" />
+                            <local:MyRadioButton x:Name="NavFsDownload" ColorType="Highlight" Text="下载" Margin="4,0" Padding="2,0" />
+                            <local:MyRadioButton x:Name="NavFsSetup" ColorType="Highlight" Text="设置" Margin="4,0" Padding="2,0" />
+                            <local:MyButton x:Name="BtnFsExit" Text="退出全屏" ColorType="Highlight" Height="30" MinWidth="100" Padding="12,0" Margin="18,0,0,0" />
                         </StackPanel>
                     </Grid>
                 </Grid>

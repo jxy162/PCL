@@ -662,6 +662,8 @@ Public Class FormMain
     Public IsFullscreenMode As Boolean = False
     Private FsLastState As WindowState = WindowState.Normal
     Private FsLastLeft As Double, FsLastTop As Double, FsLastWidth As Double, FsLastHeight As Double
+    Private FsLastResize As ResizeMode = ResizeMode.CanResize
+    Private FsOnHome As Boolean = True
 
     Private Sub BtnTitleMax_Click() Handles BtnTitleMax.Click
         ToggleFullscreen()
@@ -669,14 +671,26 @@ Public Class FormMain
     Private Sub BtnFsExit_Click() Handles BtnFsExit.Click
         ExitFullscreenMode()
     End Sub
-    Private Sub WindMain_KeyDown(sender As Object, e As KeyEventArgs ) Handles Me.PreviewKeyDown
+    Private Sub WindMain_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.PreviewKeyDown
         If e.Key = Key.F11 Then
             e.Handled = True
             ToggleFullscreen()
         ElseIf IsFullscreenMode AndAlso e.Key = Key.Escape Then
             e.Handled = True
-            ExitFullscreenMode()
+            If FsOnHome Then ExitFullscreenMode() Else ShowFsHome()
         End If
+    End Sub
+    Private Sub FsNavHome_Check() Handles NavFsHome.Check
+        If NavFsHome.Checked Then ShowFsHome()
+    End Sub
+    Private Sub FsNavInstance_Check() Handles NavFsInstance.Check
+        If NavFsInstance.Checked Then ShowFsPage(PageType.InstanceSelect)
+    End Sub
+    Private Sub FsNavDownload_Check() Handles NavFsDownload.Check
+        If NavFsDownload.Checked Then ShowFsPage(PageType.Download)
+    End Sub
+    Private Sub FsNavSetup_Check() Handles NavFsSetup.Check
+        If NavFsSetup.Checked Then ShowFsPage(PageType.Setup)
     End Sub
 
     Public Sub ToggleFullscreen()
@@ -689,25 +703,23 @@ Public Class FormMain
             IsFullscreenMode = True
             FsLastState = WindowState
             FsLastLeft = Left : FsLastTop = Top : FsLastWidth = Width : FsLastHeight = Height
+            FsLastResize = ResizeMode
             WindowState = WindowState.Normal
-            Dim Wa = SystemParameters.WorkArea
-            Left = Wa.Left : Top = Wa.Top : Width = Wa.Width : Height = Wa.Height
+            ResizeMode = ResizeMode.NoResize
+            WindowState = WindowState.Maximized
             PanBack.Margin = New Thickness(0)
             BorderForm.Margin = New Thickness(0)
             RectForm.RadiusX = 0 : RectForm.RadiusY = 0
             PanTitle.Visibility = Visibility.Collapsed
             PanBottom.Visibility = Visibility.Collapsed
-            PanLeft.Visibility = Visibility.Collapsed
-            PanMain.Visibility = Visibility.Collapsed
-            PanHint.Visibility = Visibility.Collapsed
             For Each R In {ResizerT, ResizerB, ResizerR, ResizerL, ResizerLT, ResizerLB, ResizerRB, ResizerRT}
                 R.Visibility = Visibility.Collapsed
             Next
-            UpdateFullscreenContent()
             PanFullscreen.Visibility = Visibility.Visible
-            PanFsContent.Opacity = 0
-            AniStart(AaOpacity(PanFullscreen, 1 - PanFullscreen.Opacity, 180), "Fullscreen")
-            AniStart(AaOpacity(PanFsContent, 1, 300, 80, New AniEaseOutFluent), "Fullscreen")
+            PanFullscreen.Opacity = 0
+            AniStart(AaOpacity(PanFullscreen, 1, 220), "Fullscreen")
+            Topmost = True
+            ShowFsHome()
             Logger.Info("已进入全屏模式")
         Catch ex As Exception
             Logger.Warn(ex, "进入全屏模式失败")
@@ -718,12 +730,13 @@ Public Class FormMain
         Try
             If Not IsFullscreenMode Then Return
             IsFullscreenMode = False
+            Topmost = False
             AniStart({
-                AaOpacity(PanFullscreen, -PanFullscreen.Opacity, 150),
+                AaOpacity(PanFullscreen, -PanFullscreen.Opacity, 160),
                 AaCode(Sub()
                            PanFullscreen.Visibility = Visibility.Collapsed
                            PanFullscreen.Opacity = 1
-                       End Sub, 170)
+                       End Sub, 180)
             }, "Fullscreen")
             PanTitle.Visibility = Visibility.Visible
             PanBottom.Visibility = Visibility.Visible
@@ -736,6 +749,7 @@ Public Class FormMain
                 R.Visibility = Visibility.Visible
             Next
             Left = FsLastLeft : Top = FsLastTop : Width = FsLastWidth : Height = FsLastHeight
+            ResizeMode = FsLastResize
             WindowState = FsLastState
             Logger.Info("已退出全屏模式")
         Catch ex As Exception
@@ -743,6 +757,83 @@ Public Class FormMain
         End Try
     End Sub
 
+    ''' <summary>显示全屏主页仪表盘。</summary>
+    Public Sub ShowFsHome()
+        Try
+            FsOnHome = True
+            If Not NavFsHome.Checked Then NavFsHome.SetChecked(True, True, False)
+            PanFsBack.Visibility = Visibility.Visible
+            PanFsHome.Visibility = Visibility.Visible
+            PanFsHome.RenderTransform = New TranslateTransform(0, 26)
+            AniStart({
+                AaOpacity(PanFsHome, 1 - PanFsHome.Opacity, 260),
+                AaTranslateY(PanFsHome, 0, 340,, New AniEaseOutFluent)
+            }, "FsPage")
+            UpdateFullscreenContent()
+        Catch ex As Exception
+            Logger.Warn(ex, "显示全屏主页失败")
+        End Try
+    End Sub
+
+    ''' <summary>在全屏模式下切换到某个主页面（保持全屏）。</summary>
+    Public Sub ShowFsPage(Target As PageType)
+        Try
+            FsOnHome = False
+            PageChange(Target)
+            AniStart({
+                AaOpacity(PanFsHome, -PanFsHome.Opacity, 140),
+                AaCode(Sub() PanFsBack.Visibility = Visibility.Collapsed, 150)
+            }, "FsPage")
+        Catch ex As Exception
+            Logger.Warn(ex, "全屏切换页面失败")
+        End Try
+    End Sub
+
+    Private Sub FsTile_MouseEnter(sender As Object, e As MouseEventArgs) Handles TileFsLaunch.MouseEnter, TileFsDownload.MouseEnter, TileFsInstance.MouseEnter, TileFsSetup.MouseEnter
+        FsTileHover(CType(sender, Border), True)
+    End Sub
+    Private Sub FsTile_MouseLeave(sender As Object, e As MouseEventArgs) Handles TileFsLaunch.MouseLeave, TileFsDownload.MouseLeave, TileFsInstance.MouseLeave, TileFsSetup.MouseLeave
+        FsTileHover(CType(sender, Border), False)
+    End Sub
+    Private Sub FsTileHover(Target As Border, IsIn As Boolean)
+        Try
+            If TypeOf Target.RenderTransform IsNot ScaleTransform Then
+                Target.RenderTransform = New ScaleTransform(1, 1)
+                Target.RenderTransformOrigin = New Point(0.5, 0.5)
+            End If
+            Dim Sc = CType(Target.RenderTransform, ScaleTransform)
+            If IsIn Then
+                AniStart({
+                    AaScaleTransform(Target, 1.08 - Sc.ScaleX, 220,, New AniEaseOutBack(AniEasePower.Weak)),
+                    AaColor(Target, Border.BackgroundProperty, New MyColor(64, 255, 255, 255) - Target.Background, 180),
+                    AaColor(Target, Border.BorderBrushProperty, New MyColor(200, 155, 232, 160) - Target.BorderBrush, 180)
+                }, "FsTileHover " & Target.Name)
+            Else
+                AniStart({
+                    AaScaleTransform(Target, 1 - Sc.ScaleX, 260,, New AniEaseOutFluent),
+                    AaColor(Target, Border.BackgroundProperty, New MyColor(38, 255, 255, 255) - Target.Background, 220),
+                    AaColor(Target, Border.BorderBrushProperty, New MyColor(60, 255, 255, 255) - Target.BorderBrush, 220)
+                }, "FsTileHover " & Target.Name)
+            End If
+        Catch ex As Exception
+            Logger.Warn(ex, "全屏卡片悬停动效失败")
+        End Try
+    End Sub
+
+    Private Sub TileFsLaunch_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsLaunch.MouseLeftButtonUp
+        FrmLaunchLeft.LaunchButtonClick()
+    End Sub
+    Private Sub TileFsDownload_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsDownload.MouseLeftButtonUp
+        ShowFsPage(PageType.Download)
+    End Sub
+    Private Sub TileFsInstance_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsInstance.MouseLeftButtonUp
+        ShowFsPage(PageType.InstanceSelect)
+    End Sub
+    Private Sub TileFsSetup_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsSetup.MouseLeftButtonUp
+        ShowFsPage(PageType.Setup)
+    End Sub
+
+    ''' <summary>刷新全屏页显示的版本与账号。</summary>
     Public Sub UpdateFullscreenContent()
         Try
             LabFsVersion.Text = If(McInstanceSelected IsNot Nothing AndAlso McInstanceSelected.IsLoaded, McInstanceSelected.Name, "未选择版本")
@@ -753,20 +844,6 @@ Public Class FormMain
         End Try
     End Sub
 
-    Private Sub TileFsLaunch_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsLaunch.MouseLeftButtonUp
-        ExitFullscreenMode()
-        PageChange(PageType.Launch)
-        FrmLaunchLeft.LaunchButtonClick()
-    End Sub
-    Private Sub TileFsDownload_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsDownload.MouseLeftButtonUp
-        ExitFullscreenMode() : PageChange(PageType.Download)
-    End Sub
-    Private Sub TileFsInstance_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsInstance.MouseLeftButtonUp
-        ExitFullscreenMode() : PageChange(PageType.InstanceSelect)
-    End Sub
-    Private Sub TileFsSetup_Click(sender As Object, e As MouseButtonEventArgs) Handles TileFsSetup.MouseLeftButtonUp
-        ExitFullscreenMode() : PageChange(PageType.Setup)
-    End Sub
     ''' <summary>
     ''' 刷新标题栏的当前账号显示。
     ''' </summary>
