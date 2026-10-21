@@ -768,11 +768,12 @@ Public Class FormMain
             PanFullscreen.Visibility = Visibility.Visible
             PanFullscreen.Opacity = 0
             PanFullscreen.RenderTransformOrigin = New Point(0.5, 0.5)
-            PanFullscreen.RenderTransform = New ScaleTransform(0.86, 0.86)
-            AniStart({
-                AaOpacity(PanFullscreen, 1, 320, , New AniEaseOutFluent),
-                AaScaleTransform(PanFullscreen, 1, 420, , New AniEaseOutBack(AniEasePower.Weak))
-            }, "Fullscreen")
+            Dim FsScale As New ScaleTransform(0.86, 0.86)
+            PanFullscreen.RenderTransform = FsScale
+            Dim ScaleEase As New System.Windows.Media.Animation.CubicEase With {.EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut}
+            FsScale.BeginAnimation(ScaleTransform.ScaleXProperty, New System.Windows.Media.Animation.DoubleAnimation(0.86, 1, New Duration(TimeSpan.FromMilliseconds(360))) With {.EasingFunction = ScaleEase})
+            FsScale.BeginAnimation(ScaleTransform.ScaleYProperty, New System.Windows.Media.Animation.DoubleAnimation(0.86, 1, New Duration(TimeSpan.FromMilliseconds(360))) With {.EasingFunction = ScaleEase})
+            AniStart(AaOpacity(PanFullscreen, 1, 320, , New AniEaseOutFluent), "Fullscreen")
             ShowFsHome()
             Topmost = True '窗口无边框透明时，全屏会被任务栏压住
             Activate()
