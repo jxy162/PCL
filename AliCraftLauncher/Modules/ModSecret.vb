@@ -154,11 +154,12 @@ Friend Module ModSecret
             Application.Current.Resources("ColorBrushOnAccent") = New SolidColorBrush(GetContrastForeground(Color3))
             '禁用态配色：深色主题用半透明白，浅色主题用半透明黑
             If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
+                '深色背景上用较高不透明度的白字，保证约 4.5:1 对比度
                 Application.Current.Resources("ColorBrushDisabledBack") = New SolidColorBrush(New MyColor(26, 255, 255, 255))
-                Application.Current.Resources("ColorBrushDisabledFore") = New SolidColorBrush(New MyColor(110, 255, 255, 255))
+                Application.Current.Resources("ColorBrushDisabledFore") = New SolidColorBrush(New MyColor(150, 255, 255, 255))
             Else
                 Application.Current.Resources("ColorBrushDisabledBack") = New SolidColorBrush(New MyColor(18, 0, 0, 0))
-                Application.Current.Resources("ColorBrushDisabledFore") = New SolidColorBrush(New MyColor(128, 0, 0, 0))
+                Application.Current.Resources("ColorBrushDisabledFore") = New SolidColorBrush(New MyColor(160, 0, 0, 0))
             End If
             Application.Current.Resources("ColorBrush1") = New SolidColorBrush(Color1)
             Application.Current.Resources("ColorBrush2") = New SolidColorBrush(Color2)
