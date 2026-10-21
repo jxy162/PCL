@@ -767,7 +767,12 @@ Public Class FormMain
             Next
             PanFullscreen.Visibility = Visibility.Visible
             PanFullscreen.Opacity = 0
-            AniStart(AaOpacity(PanFullscreen, 1, 220), "Fullscreen")
+            PanFullscreen.RenderTransformOrigin = New Point(0.5, 0.5)
+            PanFullscreen.RenderTransform = New ScaleTransform(0.86, 0.86)
+            AniStart({
+                AaOpacity(PanFullscreen, 1, 320, , New AniEaseOutFluent),
+                AaScaleTransform(PanFullscreen, 1, 420, , New AniEaseOutBack(AniEasePower.Weak))
+            }, "Fullscreen")
             ShowFsHome()
             Topmost = True '窗口无边框透明时，全屏会被任务栏压住
             Activate()
