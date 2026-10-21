@@ -692,6 +692,11 @@ ExitRefresh:
             FrmLaunchLeft.BtnMore.Visibility = FrmLaunchLeft.BtnVersion.Visibility
         End If
     End Sub
+    '副标题画在启动按钮的填充色上，禁用时要跟着换成禁用态文字色才看得清
+    Private Sub RefreshVersionTextColor() Handles BtnLaunch.IsEnabledChanged, BtnLaunch.Loaded
+        If LabVersion Is Nothing Then Return
+        LabVersion.SetResourceReference(TextBlock.ForegroundProperty, If(BtnLaunch.IsEnabled, "ColorBrushOnAccentSecondary", "ColorBrushDisabledFore"))
+    End Sub
     '取消按钮
     Public Sub BtnCancel_Click() Handles BtnCancel.Click
         If McLaunchLoaderReal IsNot Nothing Then

@@ -60,6 +60,8 @@
             <SolidColorBrush x:Key="ColorBrushRedDark">#ce2111</SolidColorBrush>
             <!-- 强调色填充上的前景色：强调色深浅随主题与自定义色相变化，文字固定白色以保证对比度 -->
             <SolidColorBrush x:Key="ColorBrushOnAccent" Color="#ffffff" />
+            <!-- 强调色填充上的次要文字（如按钮内的版本名），透明度由主题按对比度计算 -->
+            <SolidColorBrush x:Key="ColorBrushOnAccentSecondary" Color="#BFFFFFFF" />
             <!-- 禁用态：不再保留强调色填充，改用低饱和背景配可辨认的灰色文字 -->
             <SolidColorBrush x:Key="ColorBrushDisabledBack" Color="#1A000000" />
             <SolidColorBrush x:Key="ColorBrushDisabledFore" Color="#A0000000" />

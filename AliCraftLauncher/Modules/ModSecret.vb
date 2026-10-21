@@ -152,6 +152,8 @@ Friend Module ModSecret
             ColorSemiTransparent = New MyColor(1, Color8)
             '强调色填充上的文字色：按 WCAG 相对亮度选择黑/白，避免浅色主题（黄、绿等）下白字与填充融在一起
             Application.Current.Resources("ColorBrushOnAccent") = New SolidColorBrush(GetContrastForeground(Color3))
+            '强调色填充上的次要文字：在保证可读对比度的前提下保留次要层次
+            Application.Current.Resources("ColorBrushOnAccentSecondary") = New SolidColorBrush(GetSecondaryContrastForeground(Color3))
             '禁用态配色：深色主题用半透明白，浅色主题用半透明黑
             If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
                 '深色背景上用较高不透明度的白字，保证约 4.5:1 对比度
@@ -214,9 +216,30 @@ Friend Module ModSecret
     ''' 根据背景色的相对亮度选择黑色或白色前景，保证文字/图标与填充色有足够对比度。
     ''' </summary>
     Public Function GetContrastForeground(Bg As MyColor) As MyColor
-        '亮度高于该阈值时改用深色文字（黄色、浅绿等浅色强调色），否则使用白色
-        If RelativeLuminance(Bg) > 0.36 Then Return New MyColor(26, 26, 26)
-        Return New MyColor(255, 255, 255)
+        '黑、白中取对比度更高者（黄色、浅绿等浅色强调色会自动改用深色文字）
+        Dim Dark = New MyColor(26, 26, 26)
+        Return If(ContrastRatio(Dark, Bg) >= ContrastRatio(New MyColor(255, 255, 255), Bg), Dark, New MyColor(255, 255, 255))
+    End Function
+    ''' <summary>
+    ''' 强调色填充上的次要文字色：在满足对比度的前提下尽量贴近背景，以保留次要层次。
+    ''' </summary>
+    Public Function GetSecondaryContrastForeground(Bg As MyColor) As MyColor
+        Dim Base = GetContrastForeground(Bg)
+        For i As Integer = 1 To 20
+            Dim Mixed = MyColor.Lerp(Bg, Base, i / 20)
+            If ContrastRatio(Mixed, Bg) >= 5 Then Return Mixed
+        Next
+        Return Base
+    End Function
+    ''' <summary>WCAG 2.x 对比度（1~21）。</summary>
+    Public Function ContrastRatio(A As MyColor, B As MyColor) As Double
+        Dim La = RelativeLuminance(A), Lb = RelativeLuminance(B)
+        If La < Lb Then
+            Dim Tmp = La
+            La = Lb
+            Lb = Tmp
+        End If
+        Return (La + 0.05) / (Lb + 0.05)
     End Function
     ''' <summary>WCAG 2.x 相对亮度。</summary>
     Public Function RelativeLuminance(Col As MyColor) As Double
