@@ -67,8 +67,9 @@ Public Class MyCard
             .Margin = New Thickness(-3, -3, -3, -3 - GetWPFSize(1)), .ShadowRadius = 3, .Opacity = DropShadowIdleOpacity, .CornerRadius = New CornerRadius(12)}
         MainChrome.SetResourceReference(MyDropShadow.ColorProperty, "ColorObject1")
         Children.Insert(0, MainChrome)
-        MainBorder = New Border With {.CornerRadius = New CornerRadius(12), .IsHitTestVisible = False}
-        MainBorder.SetResourceReference(Border.BackgroundProperty, "ColorBrushCard")
+        MainBorder = New Border With {.CornerRadius = New CornerRadius(12), .IsHitTestVisible = False, .BorderThickness = New Thickness(1)}
+        MainBorder.SetResourceReference(Border.BackgroundProperty, "ColorBrushGlassCard")
+        MainBorder.SetResourceReference(Border.BorderBrushProperty, "ColorBrushGlassBorder")
         Children.Insert(1, MainBorder)
         MainGrid = New Grid
         Children.Add(MainGrid)

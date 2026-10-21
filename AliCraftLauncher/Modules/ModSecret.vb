@@ -165,10 +165,18 @@ Friend Module ModSecret
                 Application.Current.Resources("ColorBrushGray" & (i + 1)) = New SolidColorBrush(CType(GrayBrushes(i), Color))
             Next
             If Settings.Get(Of Integer)("UiThemeMode") = 1 Then
-                Application.Current.Resources("ColorBrushBackgroundTransparentSidebar") = New SolidColorBrush(New MyColor(241, 20, 23, 28))
+                Application.Current.Resources("ColorBrushBackgroundTransparentSidebar") = New SolidColorBrush(New MyColor(205, 20, 23, 28))
+                Application.Current.Resources("ColorBrushGlassCard") = New SolidColorBrush(New MyColor(200, 22, 26, 32))
+                Application.Current.Resources("ColorBrushGlassInput") = New SolidColorBrush(New MyColor(150, 18, 21, 26))
+                Application.Current.Resources("ColorBrushGlassDialog") = New SolidColorBrush(New MyColor(235, 22, 26, 32))
+                Application.Current.Resources("ColorBrushGlassBorder") = New SolidColorBrush(New MyColor(55, 255, 255, 255))
                 Application.Current.Resources("ColorBrushBarGlass") = New SolidColorBrush(New MyColor(200, 18, 21, 26))
             Else
-                Application.Current.Resources("ColorBrushBackgroundTransparentSidebar") = New SolidColorBrush(New MyColor(241, 255, 255, 255))
+                Application.Current.Resources("ColorBrushBackgroundTransparentSidebar") = New SolidColorBrush(New MyColor(205, 255, 255, 255))
+                Application.Current.Resources("ColorBrushGlassCard") = New SolidColorBrush(New MyColor(200, 255, 255, 255))
+                Application.Current.Resources("ColorBrushGlassInput") = New SolidColorBrush(New MyColor(150, 255, 255, 255))
+                Application.Current.Resources("ColorBrushGlassDialog") = New SolidColorBrush(New MyColor(235, 255, 255, 255))
+                Application.Current.Resources("ColorBrushGlassBorder") = New SolidColorBrush(New MyColor(70, 255, 255, 255))
                 Application.Current.Resources("ColorBrushBarGlass") = New SolidColorBrush(New MyColor(200, 255, 255, 255))
             End If
             If Settings.Get(Of Integer)("UiThemeMode") = 1 Then

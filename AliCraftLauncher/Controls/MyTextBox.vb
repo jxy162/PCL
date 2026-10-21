@@ -245,11 +245,11 @@ Public Class MyTextBox
                 If IsValidated OrElse Not IsTextChanged Then
                     If IsFocused Then
                         ForeColorName = "ColorBrush3"
-                        BackColorName = "ColorBrush7"
+                        BackColorName = "ColorBrushGlassInput"
                         AnimationTime = 10
                     ElseIf IsMouseOver Then
                         ForeColorName = "ColorBrush4"
-                        BackColorName = "ColorBrush7"
+                        BackColorName = "ColorBrushGlassInput"
                         AnimationTime = 100
                     Else '未选中
                         ForeColorName = "ColorBrushBg0"
