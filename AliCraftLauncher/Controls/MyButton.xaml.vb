@@ -159,6 +159,13 @@ Public Class MyButton
     Private Sub MyButton_Loaded() Handles Me.Loaded
         If _ColorType = ColorState.Highlight Then PanFore.SetResourceReference(Border.BackgroundProperty, "ColorBrush3")
     End Sub
+    'M3 Expressive：胶囊按钮（圆角 = 高度一半）
+    Private Sub MyButton_SizeChanged() Handles Me.SizeChanged
+        Try
+            If PanFore IsNot Nothing AndAlso ActualHeight > 0 Then PanFore.CornerRadius = New CornerRadius(ActualHeight / 2)
+        Catch
+        End Try
+    End Sub
     Private Sub Button_MouseEnter() Handles Me.MouseEnter
         Dim HoverBack As String = If(_ColorType = ColorState.Red, "ColorBrushRedBack", If(_ColorType = ColorState.Highlight, "ColorBrush2", "ColorBrush7"))
         AniStart(AaColor(PanFore, BackgroundProperty, HoverBack, AnimationColorIn), "MyButton Background " & Uuid)

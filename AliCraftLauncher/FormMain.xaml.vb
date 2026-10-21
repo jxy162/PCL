@@ -689,7 +689,7 @@ Public Class FormMain
                 Anim.EasingFunction = New System.Windows.Media.Animation.CubicEase With {.EasingMode = System.Windows.Media.Animation.EasingMode.EaseOut}
                 Blur.BeginAnimation(Effects.BlurEffect.RadiusProperty, Anim)
             End If
-            ImgBack.Margin = New Thickness(-Target / 1.8)
+            ImgBack.Margin = New Thickness(-Target / 1.8, -Target / 1.8, -Target / 1.8, 0)
         Catch ex As Exception
             Logger.Warn(ex, "背景模糊动画失败")
         End Try
@@ -706,7 +706,7 @@ Public Class FormMain
         Else
             ImgBack.Effect = New Effects.BlurEffect With {.Radius = BlurRadius}
         End If
-        ImgBack.Margin = New Thickness(-BlurRadius / 1.8)
+        ImgBack.Margin = New Thickness(-BlurRadius / 1.8, -BlurRadius / 1.8, -BlurRadius / 1.8, 0)
         '背景图片适应方式
         Dim BackgroundType As Integer = Settings.Get(Of Integer)("UiBackgroundSuit")
         If ImgBack.Background IsNot Nothing Then
