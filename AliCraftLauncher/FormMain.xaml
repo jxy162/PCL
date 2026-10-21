@@ -252,6 +252,7 @@
                             </StackPanel>
                         </StackPanel>
                     </Grid>
+                    <TextBlock x:Name="LabFsHint" Text="方向键 / 手柄方向 移动焦点　Enter / A 确认　Esc / B 返回　F11 / Start 全屏" FontSize="12" Foreground="#7FA0B0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="64,0,64,18" IsHitTestVisible="False" />
                     <Grid x:Name="PanFsNav" VerticalAlignment="Top" Height="76">
                         <Grid.Background>
                             <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">

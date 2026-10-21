@@ -802,6 +802,7 @@ Public Class FormMain
             PanMain.Margin = New Thickness(0)
             PanFsHome.Visibility = Visibility.Collapsed
             PanFsHome.Opacity = 0
+            LabFsHint.Visibility = Visibility.Collapsed
             PanFsBack.Visibility = Visibility.Collapsed
             Logger.Info("已退出全屏模式")
         Catch ex As Exception
@@ -835,6 +836,7 @@ Public Class FormMain
             SyncFsNav(PageType.Launch)
             PanFsBack.Visibility = Visibility.Visible
             PanFsHome.Visibility = Visibility.Visible
+            LabFsHint.Visibility = Visibility.Visible
             PanFsHome.Opacity = 0
             PanFsHome.RenderTransform = New TranslateTransform(0, 26)
             AniStart({
@@ -857,6 +859,7 @@ Public Class FormMain
             PageChange(Target)
             UpdateFullscreenLayout()
             RefreshFsFocusLater()
+            LabFsHint.Visibility = Visibility.Collapsed
             AniStart({
                 AaOpacity(PanFsHome, -PanFsHome.Opacity, 140),
                 AaCode(Sub()
