@@ -234,6 +234,9 @@
     <Compile Include="Controls\MyHint.xaml.vb">
       <DependentUpon>MyHint.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\SplashWindow.xaml.vb">
+      <DependentUpon>SplashWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MyLoading.xaml.vb">
       <DependentUpon>MyLoading.xaml</DependentUpon>
     </Compile>
@@ -419,6 +422,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MyIconButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SplashWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

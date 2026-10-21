@@ -1,0 +1,44 @@
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Class="SplashWindow"
+    Title="AliCraftLauncher" Width="360" Height="240"
+    WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+    ResizeMode="NoResize" ShowInTaskbar="False" Topmost="True"
+    WindowStartupLocation="CenterScreen" Icon="/AliCraftLauncher;component/Images/icon.ico" Opacity="0">
+    <Border Margin="12" CornerRadius="14" Background="White" BorderBrush="#1A000000" BorderThickness="1">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="20" ShadowDepth="0" Opacity="0.25" Color="Black" />
+        </Border.Effect>
+        <Grid>
+            <Grid Width="88" Height="88" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,36,0,0">
+                <Canvas x:Name="PanRing" Width="88" Height="88" RenderTransformOrigin="0.5,0.5">
+                    <Canvas.RenderTransform>
+                        <RotateTransform x:Name="RingRotate" CenterX="44" CenterY="44" />
+                    </Canvas.RenderTransform>
+                    <Ellipse Canvas.Left="78" Canvas.Top="40" Width="8" Height="8" Fill="#1370f3" Opacity="1" />
+                    <Ellipse Canvas.Left="67" Canvas.Top="67" Width="8" Height="8" Fill="#1370f3" Opacity="0.85" />
+                    <Ellipse Canvas.Left="40" Canvas.Top="78" Width="8" Height="8" Fill="#1370f3" Opacity="0.7" />
+                    <Ellipse Canvas.Left="13" Canvas.Top="67" Width="8" Height="8" Fill="#1370f3" Opacity="0.55" />
+                    <Ellipse Canvas.Left="2" Canvas.Top="40" Width="8" Height="8" Fill="#1370f3" Opacity="0.42" />
+                    <Ellipse Canvas.Left="13" Canvas.Top="13" Width="8" Height="8" Fill="#1370f3" Opacity="0.3" />
+                    <Ellipse Canvas.Left="40" Canvas.Top="2" Width="8" Height="8" Fill="#1370f3" Opacity="0.2" />
+                    <Ellipse Canvas.Left="67" Canvas.Top="13" Width="8" Height="8" Fill="#1370f3" Opacity="0.12" />
+                </Canvas>
+                <Image Source="/AliCraftLauncher;component/Images/icon.ico" Width="44" Height="44"
+                       HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1" />
+                    </Image.RenderTransform>
+                </Image>
+            </Grid>
+            <TextBlock x:Name="LabTitle" Text="AliCraftLauncher" FontSize="20" FontWeight="SemiBold" Foreground="#343d4a"
+                       HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,140,0,0" Opacity="0" />
+            <TextBlock x:Name="LabSub" Text="正在准备启动器…" FontSize="12" Foreground="#8c8c8c"
+                       HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,170,0,0" Opacity="0" />
+            <Grid Width="200" Height="3" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,192,0,0" Background="#e0eafd">
+                <Border x:Name="BarFill" Width="0" HorizontalAlignment="Left" Background="#1370f3" CornerRadius="2" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

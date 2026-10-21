@@ -122,8 +122,8 @@ RetryCacheCheck:
             End If
             '设置初始窗口
             If Settings.Get(Of Boolean)("UiLauncherLogo") Then
-                FrmStart = New SplashScreen("Images\icon.ico")
-                FrmStart.Show(False, True)
+                FrmStart = New SplashWindow
+                FrmStart.Show()
             End If
             '基础信息
             Logger.Info($"程序版本：{VersionDisplay} ({VersionCode}{If(CommitHash = "", "", $"，#{CommitHash}")})")

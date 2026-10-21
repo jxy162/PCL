@@ -389,7 +389,7 @@ Public Class FormMain
         'MinHeight = 50
         'MinWidth = 50
         Topmost = False
-        If FrmStart IsNot Nothing Then FrmStart.Close(New TimeSpan(0, 0, 0, 0, 400 / AniSpeed))
+        If FrmStart IsNot Nothing Then FrmStart.CloseWithDelay(New TimeSpan(0, 0, 0, 0, 200))
         '更改窗口
         Top = (GetWPFSize(My.Computer.Screen.WorkingArea.Height) - Height) / 2
         Left = (GetWPFSize(My.Computer.Screen.WorkingArea.Width) - Width) / 2
